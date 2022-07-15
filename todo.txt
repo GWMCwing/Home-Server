@@ -1,0 +1,1 @@
+Store persistent data in mount volume instead of the container

@@ -1,0 +1,10 @@
+{
+  "GW_MC": {
+    "userId": 0,
+    "userName": "GW_MC",
+    "hash": "6p2Qbr+TwG0mUa6v2x2AS0TN/irG8tn3nRbf8V2NAuDWigi88Ycokzl2xlLDKHpodToCI3uaYOOxwT6pTgl+w+IAbru3Qq5QQ7w9K717BT9BT7FklC/8OmKKuVbsfzf0Ysv0ejiO5qvp3MVzLnBpgJXJzl/oSn5iefjjUYmFXfE=",
+    "salt": "FVIu+78qBbk2ANvDPN1Sl94b7q1F0AuHRqB/B4qssxGh2nABGXuG00RALzesGvyY2hLSaLKHIOe1srAWVouqTQ==",
+    "expireTime": 1657857316855,
+    "isPermanent": false
+  }
+}
