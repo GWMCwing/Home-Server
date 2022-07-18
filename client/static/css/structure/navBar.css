@@ -1,0 +1,30 @@
+:root{
+    --default-navBar-Color: rgb(225, 225, 225)
+}
+#navBar{
+    overflow: hidden;
+    background-color: rgb(37, 37, 37);
+}
+#navBar a{
+    color:inherit;
+    float: left;
+    text-align: center;
+    padding: 0.8rem 1.2rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform .2s ease-in-out;
+}
+#navBar a.right{
+    float: right;
+}
+#navBar a.left.active,#navBar a.right.active {
+    color: green;
+}
+
+#navBar a:active, #navBar a:visited{
+    color:inherit;
+}
+#navBar a:hover{
+    transform: scale(1.05); 
+    text-shadow: 0rem 0rem 2px green;
+}

@@ -1,7 +1,8 @@
 import fs from 'fs';
-const { User } = require('./user');
+const { User, UserFactory } = require('./user');
 const hash = require('pbkdf2-password')();
 const pathToUserListJson = __dirname + '/userList.json';
+//TODO rebuild
 //TODO getter for private class ?
 class UserManager {
     static #_instance = null;
@@ -10,6 +11,7 @@ class UserManager {
      * @type Generator
      */
     static #userIdGenerator = null;
+    // change to number
     static ERROR_USER_NOT_FOUND = 'Error: User not found';
     static ERROR_USER_LIST_NOT_INITIATED = 'Error: User list not Initiated';
     static ERROR_USER_ALREADY_IN_LIST = 'Error: User Already in List';
@@ -23,12 +25,6 @@ class UserManager {
             UserManager.#userIdGenerator = this.#userIdGeneratorBuilder(nextId);
         } catch (error) {
             throw error;
-        }
-    }
-    *#userIdGeneratorBuilder(initialId) {
-        let nextId = initialId;
-        while (true) {
-            yield nextId++;
         }
     }
     logUserList() {
@@ -46,33 +42,6 @@ class UserManager {
                 callback(new Error(this.ERROR_USER_NOT_FOUND));
             }
         );
-    }
-    #reloadUserListSync() {
-        // const userListJson = JSON.parse(
-        //     fs.readFileSync(pathToUserListJson, 'utf8')
-        // );
-        let userListJson,
-            maxUserId = -1;
-        try {
-            userListJson = require(pathToUserListJson);
-        } catch (err) {
-            console.warn('User List not Found');
-            console.warn('Creating empty userListJson');
-            fs.writeFileSync(pathToUserListJson, '{}');
-            userListJson = {};
-        }
-        for (const [userNameKey, userJson] of Object.entries(userListJson)) {
-            const { userId, userName, hash, salt, expireTime } = userJson;
-            if (userId > maxUserId) maxUserId = userId;
-            UserManager.#userList[userNameKey] = new User(
-                userId,
-                userName,
-                hash,
-                salt,
-                expireTime ? expireTime : Infinity
-            );
-        }
-        return maxUserId;
     }
 
     // alternative new ClassName();
@@ -100,16 +69,16 @@ class UserManager {
     }
     /**
      *
-     * @param {string} userName
-     * @param {string} userPasswordHash
+     * @param {string} name
+     * @param {string} passwordHash
      * @param {string} salt
      * @param {number} ttl
      * @param {function} callback
      * @returns callback()
      */
     async createUser(
-        userName,
-        userPasswordHash,
+        name,
+        passwordHash,
         salt,
         ttl = 60,
         callback = (err, user) => {
@@ -117,17 +86,16 @@ class UserManager {
             return user;
         }
     ) {
-        const userId = UserManager.#userIdGenerator.next().value;
-        if (await this.UserExist(userName))
+        const id = UserManager.#userIdGenerator.next().value;
+        if (await this.UserExist(name))
             return callback(new Error(UserManager.ERROR_USER_ALREADY_IN_LIST));
-        const user = new User(
-            userId,
-            userName,
-            userPasswordHash,
-            salt,
-            ttl * 1000 * 60 + Date.now()
-        );
-        UserManager.#userList[userName] = user;
+        const user = new UserFactory()
+            .setId(id)
+            .setName(name)
+            .setHash(passwordHash, salt)
+            .setExpireTime(ttl * 1000 * 60 + Date.now())
+            .build();
+        UserManager.#userList[name] = user;
         this.exportUserList().catch((err) => {
             console.error(err);
         });
@@ -156,6 +124,39 @@ class UserManager {
 
     async removeUser(...argv) {
         throw 'Method not implemented';
+    }
+    *#userIdGeneratorBuilder(initialId) {
+        let nextId = initialId;
+        while (true) {
+            yield nextId++;
+        }
+    }
+    #reloadUserListSync() {
+        // const userListJson = JSON.parse(
+        //     fs.readFileSync(pathToUserListJson, 'utf8')
+        // );
+        let userListJson,
+            maxUserId = -1;
+        try {
+            userListJson = require(pathToUserListJson);
+        } catch (err) {
+            console.warn('User List not Found');
+            console.warn('Creating empty userListJson');
+            fs.writeFileSync(pathToUserListJson, '{}');
+            userListJson = {};
+        }
+        for (const [userNameKey, userJson] of Object.entries(userListJson)) {
+            const { userId, userName, hash, salt, expireTime } = userJson;
+            if (userId > maxUserId) maxUserId = userId;
+            UserManager.#userList[userNameKey] = new User(
+                userId,
+                userName,
+                hash,
+                salt,
+                expireTime ? expireTime : Infinity
+            );
+        }
+        return maxUserId;
     }
 }
 

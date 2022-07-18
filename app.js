@@ -1,28 +1,32 @@
-const path = require('path');
 const express = require('express');
-const logger = require('morgan');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 const app = express();
 //
-const { port, viewPath } = require('./server/util/common');
+const { port } = require('./server/util/common');
 //
 const { preMiddleware } = require('./server/middleware/preMiddleware');
 const {
     errorHandlerMiddleware,
 } = require('./server/middleware/errorHandlerMiddleware');
+const { setupRouter } = require('./server/router/rootRouter');
+const { serveStatic } = require('./server/middleware/static/serveStatic');
+// ---------- end of import ---------------
 //
-app.use(logger('dev'));
+if (process.env.NODE_ENV === 'production') {
+    app.use(morgan('combined'));
+} else {
+    app.use(morgan('dev'));
+}
+app.set('view engine', 'pug');
+app.use(cookieParser());
 //
 // serving static files and
 // prevent webpage from showing in search engine
 preMiddleware(app);
+serveStatic(app);
 //
-app.get('/', function (req, res) {
-    res.sendFile(path.join(viewPath, 'homepage', 'homepage.html'));
-});
-//
-// error testing
-// const { testError } = require('./server/middleware/error/errorTest');
-// testError(app, '500')();
+setupRouter(app);
 //
 errorHandlerMiddleware(app);
 //

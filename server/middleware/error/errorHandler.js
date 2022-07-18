@@ -5,7 +5,7 @@ function serveErrorPage(req, res, next) {
     res.status(404);
     res.format({
         html: function () {
-            res.sendFile(path.join(errorPath, 'error404.html'));
+            res.render(path.join(errorPath, 'error404.pug'));
         },
         json: function () {
             res.json({ error: 'Not found' });
@@ -17,10 +17,11 @@ function serveErrorPage(req, res, next) {
 }
 
 function errorHandler(err, req, res, next) {
+    console.error(err);
     res.status(err.status || 500);
-    if (err.status === 500) res.sendFile(path.join(errorPath, 'error500.html'));
+    if (err.status === 500) res.render(path.join(errorPath, 'error500.pug'));
     //TODO general Error page
-    res.sendFile(path.join(errorPath, 'error500.html'));
+    res.render(path.join(errorPath, 'error500.pug'));
 }
 
 module.exports = { serveErrorPage, errorHandler };

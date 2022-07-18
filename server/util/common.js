@@ -3,7 +3,7 @@ const path = require('path');
 const rootPath = path.join(__dirname, '..', '..');
 //
 const port = 9522;
-const viewPath = path.join(rootPath, 'client', 'view');
+const viewPath = path.join(rootPath, 'client', 'html', 'view');
 const cssPath = path.join(rootPath, 'client', 'static', 'css');
 const publicJSPath = path.join(rootPath, 'client', 'static', 'javascript');
 const htmlStructurePath = path.join(
@@ -13,7 +13,7 @@ const htmlStructurePath = path.join(
     'html',
     'structure'
 );
-const errorPath = path.join(rootPath, 'client', 'static', 'html', 'error');
+const errorPath = path.join(rootPath, 'client', 'html', 'error');
 
 module.exports = {
     port,
