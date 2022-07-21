@@ -5,14 +5,10 @@ const { UserCollection } = require('../database/dataBase');
 const assert = require('node:assert');
 class UserManager {
     static #instance;
-    // #userIdGenerator;
     constructor() {
         if (UserManager.#instance) {
             return UserManager.#instance;
         }
-        //
-        // let nextId = 1;
-        // this.#userIdGenerator = this.#userIdGeneratorBuilder(nextId);
         UserManager.#instance = this;
     }
     async getUser(userName) {
@@ -46,12 +42,11 @@ class UserManager {
             .setHash(passwordHash, salt)
             .setAccountExpireTime(ttl * 1000 * 60 + Date.now())
             .build();
-        console.log(user);
         return await UserCollection.getInstance().insertDocument(user);
     }
     async tryAuthenticateUser(name, password, callback) {
         const user = await this.getUser(name);
-        if (!user || user.accountExpireTime < Date.now())
+        if (!user || (!user.isPermanent && user.accountExpireTime < Date.now()))
             return callback(new Error('User not Found'), false, null);
         hash(
             { password: password, salt: user.salt },
@@ -62,18 +57,10 @@ class UserManager {
                 } catch (err) {
                     return callback(err, false, null);
                 }
-                console.log('success');
                 callback(null, true, user);
             }
         );
     }
-    // private methods
-    // *#userIdGeneratorBuilder(initialId) {
-    //     let nextId = initialId;
-    //     while (true) {
-    //         yield nextId++;
-    //     }
-    // }
 }
 
 module.exports = new UserManager();

@@ -14,7 +14,7 @@ async function regenerateSession(req, res, user, callback) {
     // get a new token
     generateToken(async (err, loginToken) => {
         // set on database
-        if (err) return res.status(500).end();
+        if (err) return res.status(501).end();
         await UserCollection.getInstance().updateDoc(
             { name: user.name },
             {
@@ -48,10 +48,10 @@ async function authMiddleware(req, res, next) {
         return res.redirect('/login');
     }
     // compare expire and time now
-    if (!user.isPermanent && user.tokenExpireTime < Date.now()) {
+    if (user.tokenExpireTime < Date.now()) {
         return res.redirect('/login');
     }
-    if (user.accountExpireTime < Date.now()) {
+    if (!user.isPermanent && user.accountExpireTime < Date.now()) {
         UserCollection.getInstance().deleteOne({ id: user.id });
         return next();
     }
@@ -76,10 +76,10 @@ async function earlyLoginMiddleware(req, res, next) {
         return next();
     }
     // compare expire and time now
-    if (!user.isPermanent && user.tokenExpireTime < Date.now()) {
+    if (user.tokenExpireTime < Date.now()) {
         return next();
     }
-    if (user.accountExpireTime < Date.now()) {
+    if (!user.isPermanent && user.accountExpireTime < Date.now()) {
         UserCollection.getInstance().deleteOne({ id: user.id });
         return next();
     }
