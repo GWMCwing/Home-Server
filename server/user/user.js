@@ -1,86 +1,110 @@
 class User {
+    static PERMISSION = {
+        READ: 'r',
+        WRITE: 'w',
+    };
     constructor(
         id,
         name,
         passwordHash,
         salt,
-        expireTime,
+        accountExpireTime,
+        tokenExpireTime,
         lastLogin,
-        cookieToken
+        loginToken,
+        permission = User.PERMISSION.READ
     ) {
         this.id = id;
         this.name = name;
+        this.permission = permission;
         this.passwordHash = passwordHash;
         this.salt = salt;
-        this.expireTime = expireTime;
-        this.isPermanent = expireTime === Infinity;
+        this.isPermanent = accountExpireTime === Infinity;
         this.lastLogin = lastLogin;
-        this.cookieToken = cookieToken; //??
+        this.loginToken = loginToken;
+        this.accountExpireTime = accountExpireTime;
+        this.tokenExpireTime = tokenExpireTime;
     }
 }
 
-class UserFactory {
+const defaultTokenExpireTime = 14 * 24 * 60 * 60 * 1000;
+class UserBuilder {
     static BUILD_FAILED_ID = -1;
     static BUILD_FAILED_NAME = -2;
     static BUILD_FAILED_HASH = -3;
-    constructor() {}
+    #obj;
+    constructor() {
+        this.#obj = {};
+    }
     build() {
+        return this.buildWithObj(this.#obj);
+    }
+    buildWithObj(userObj) {
         return (
-            this.#assertCompleteness() ||
+            this.#assertCompleteness(userObj) ||
             new User(
-                this.#id,
-                this.#name,
-                this.#passwordHash,
-                this.#salt,
-                this.#expireTime,
-                this.#lastLogin,
-                this.#cookieToken
+                userObj.id,
+                userObj.name,
+                userObj.passwordHash,
+                userObj.salt,
+                userObj.accountExpireTime,
+                userObj.tokenExpireTime || Date.now() + defaultTokenExpireTime,
+                userObj.lastLogin,
+                userObj.cookieToken
             )
         );
     }
-    setId(userId) {
-        this.#id = userId;
+    setCustom(key, value) {
+        this.#obj[key] = value;
         return this;
+    }
+    setId(userId) {
+        return this.setCustom('id', userId);
     }
     setName(name) {
-        this.#name = name;
-        return this;
+        return this.setCustom('name', name);
+    }
+    setPermission(permission) {
+        return this.setCustom('permission', permission);
     }
     setHash(passwordHash, salt) {
-        this.#passwordHash = passwordHash;
-        this.#salt = salt;
-        return this;
+        return this.setCustom('passwordHash', passwordHash).setCustom(
+            'salt',
+            salt
+        );
     }
-    setExpireTime(expireTime) {
-        this.#expireTime = expireTime;
-        this.#isPermanent = expireTime === Infinity;
-        return this;
+    setAccountExpireTime(expireTime) {
+        return this.setCustom('accountExpireTime', expireTime).setCustom(
+            'isPermanent',
+            expireTime === Infinity
+        );
+    }
+    setTokenExpireTime(expireTime = defaultTokenExpireTime) {
+        return this.setCustom('tokenExpireTime', Date.now() + expireTime);
     }
     setLastLogin(lastLogin) {
-        this.#lastLogin = lastLogin;
-        return this;
+        return this.setCustom('lastLogin', lastLogin);
     }
     setCookieToken(cookieToken) {
-        this.#cookieToken = cookieToken;
-        return this;
+        return this.setCustom('cookieToken', cookieToken);
     }
-    #assertCompleteness() {
-        if (!this.userId) {
+    #assertCompleteness(userObj) {
+        if (!userObj.id) {
             console.error('User Id not set when building User');
-            return UserFactory.BUILD_FAILED_ID;
+            return UserBuilder.BUILD_FAILED_ID;
         }
-        if (!this.name) {
+        if (!userObj.name) {
             console.error('User Name not set when building User');
-            return UserFactory.BUILD_FAILED_NAME;
+            return UserBuilder.BUILD_FAILED_NAME;
         }
-        if (!this.passwordHash || !this.salt) {
+        if (!userObj.passwordHash || !userObj.salt) {
             console.error(
                 new Error('PasswordHash and Salt not set when building User')
             );
-            return UserFactory.BUILD_FAILED;
+            return UserBuilder.BUILD_FAILED;
         }
         return 0;
     }
 }
 
-module.exports = { User, UserFactory };
+module.exports = { User, UserBuilder };

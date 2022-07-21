@@ -1,9 +1,9 @@
-const { RouterFactory } = require('../routerFactory');
+const { RouterBuilder } = require('../routerFactory');
 const {
     homepageRendererCallback,
 } = require('../../render/homepage/homepageRender');
 function homepageRouter() {
-    return new RouterFactory()
+    return new RouterBuilder()
         .setPath('/')
         .addGetRequest('/', homepageRendererCallback)
         .build();

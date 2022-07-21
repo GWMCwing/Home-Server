@@ -1,5 +1,5 @@
 const { preventCrawler } = require('./crawler/preventCrawler');
-function preMiddleware(app) {
+function preMiddleware(app, db) {
     app.use(preventCrawler);
 }
 

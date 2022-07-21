@@ -159,5 +159,3 @@ class UserManager {
         return maxUserId;
     }
 }
-
-export { UserManager };

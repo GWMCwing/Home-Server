@@ -1,5 +1,5 @@
 const express = require('express');
-class RouterFactory {
+class RouterBuilder {
     #router;
     #path;
     constructor() {
@@ -32,4 +32,4 @@ class RouterFactory {
         return this;
     }
 }
-module.exports = { RouterFactory };
+module.exports = { RouterBuilder };
