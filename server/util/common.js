@@ -18,10 +18,6 @@ const htmlStructurePath = path.join(
 );
 const errorPath = path.join(rootPath, 'client', 'html', 'error');
 
-const cookieName = {
-    loginToken: 'loginToken',
-};
-
 module.exports = {
     port,
     mongodbUrl,
@@ -31,5 +27,4 @@ module.exports = {
     htmlStructurePath,
     errorPath,
     hash,
-    cookieName,
 };

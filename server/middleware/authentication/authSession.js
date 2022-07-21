@@ -36,12 +36,10 @@ async function authMiddleware(req, res, next) {
     // check if the cookie exists
     const { loginToken } = req.cookies;
     if (!loginToken) return res.redirect('/login');
-    console.log('token not found');
     let user = await UserCollection.getInstance().findDocument({
         loginToken: loginToken,
     });
     if (!user) return res.redirect('/login');
-    console.log('user not found');
     // compare cookie token
     try {
         assert.strictEqual(loginToken, user.loginToken);
@@ -50,9 +48,12 @@ async function authMiddleware(req, res, next) {
         return res.redirect('/login');
     }
     // compare expire and time now
-    if (!user.isPermanent && user.accountExpireTime < Date.now()) {
-        console.log('expire');
+    if (!user.isPermanent && user.tokenExpireTime < Date.now()) {
         return res.redirect('/login');
+    }
+    if (user.accountExpireTime < Date.now()) {
+        UserCollection.getInstance().deleteOne({ id: user.id });
+        return next();
     }
     // regenerate token
     return regenerateSession(req, res, user, (err, req, res) => {
@@ -60,5 +61,32 @@ async function authMiddleware(req, res, next) {
         next();
     });
 }
-
-module.exports = { authMiddleware, regenerateSession };
+async function earlyLoginMiddleware(req, res, next) {
+    const { loginToken } = req.cookies;
+    if (!loginToken) return next();
+    let user = await UserCollection.getInstance().findDocument({
+        loginToken: loginToken,
+    });
+    if (!user) return next();
+    // compare cookie token
+    try {
+        assert.strictEqual(loginToken, user.loginToken);
+    } catch (err) {
+        console.log(err);
+        return next();
+    }
+    // compare expire and time now
+    if (!user.isPermanent && user.tokenExpireTime < Date.now()) {
+        return next();
+    }
+    if (user.accountExpireTime < Date.now()) {
+        UserCollection.getInstance().deleteOne({ id: user.id });
+        return next();
+    }
+    // regenerate token
+    return regenerateSession(req, res, user, (err, req, res) => {
+        if (err) return res.status(501).end();
+        return res.redirect('/dashboard');
+    });
+}
+module.exports = { authMiddleware, regenerateSession, earlyLoginMiddleware };

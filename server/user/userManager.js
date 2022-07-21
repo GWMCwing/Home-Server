@@ -31,7 +31,7 @@ class UserManager {
         const user = await this.getUser(userName);
         return !!user && user.expireTime > Date.now();
     }
-    async createUser(name, passwordHash, salt, ttl = 60) {
+    async createUser(name, passwordHash, salt, ttl = 24 * 60) {
         let id;
         try {
             id = crypto.randomBytes(32).toString('hex');
@@ -51,7 +51,8 @@ class UserManager {
     }
     async tryAuthenticateUser(name, password, callback) {
         const user = await this.getUser(name);
-        if (!user) return callback(new Error('User not Found'), false, null);
+        if (!user || user.accountExpireTime < Date.now())
+            return callback(new Error('User not Found'), false, null);
         hash(
             { password: password, salt: user.salt },
             function (err, password, salt, hash) {

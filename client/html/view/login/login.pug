@@ -11,9 +11,9 @@ html(lang="en")
         include ../../structure/navBar.pug
         //- 
         //- 
-        form(name="loginForm") 
-            input(type="text", name="name", required)
-            input(type="password", name="password", required)
-            input(type="submit", value="Submit")
+        form(id = "loginForm" name="loginForm") 
+            input(type="text", name="name",autocomplete="off", required)
+            input(type="password", name="password",autocomplete="off", required)
+            input(type="submit", value="Submit" )
         //- 
         include ../../structure/footer.pug
