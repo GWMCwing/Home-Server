@@ -1,9 +1,12 @@
 const { CourseCollection } = require('../../database/dataBase');
+const { CLL } = require('../../util/consoleLogging');
 const fs = require('fs');
 const { Course } = require('./Course');
 const path = require('path');
 const axios = require('axios');
 const cheerio = require('cheerio');
+//
+const threadName = 'TASKS';
 // Promise reject means set the next timer in one day
 // promise.resolve(true) means updated
 // promise.resolve(false) means failed to fetch
@@ -26,7 +29,7 @@ async function getDepartmentMap(url) {
         });
         return departmentMap;
     } catch (err) {
-        console.error(err);
+        CLL.error(threadName, 'Fetch Dept', err);
         return false;
     }
 }
@@ -62,24 +65,28 @@ async function fetchCourseList(url, isUg) {
             );
         });
     } catch (err) {
-        console.error(err);
+        CLL.error(threadName, 'Fetch Course', err);
         return false;
     }
     const pr = await Promise.allSettled(courseInfoPromise);
     new Promise((resolve) => {
         pr.forEach((el, i) => {
-            if (el.status === 'rejected') console.error(el.reason);
+            if (el.status === 'rejected')
+                CLL.error(threadName, 'Parse Course', el.reason);
         });
     });
 }
 async function fetchAndUpdateCourseList() {
-    console.log('Fetching CourseList');
+    CLL.log(threadName, 'Fetch Update', 'Fetching CourseList');
     const config = getConfig();
-    if (config === false) Promise.reject('Fetching is disabled');
+    if (config === false) {
+        CLL.log(threadName, 'Fetch Update', 'Fetching Course List is disabled');
+        return Promise.resolve('Fetching is disabled');
+    }
     const targetUrl = config.test ? config.testUrl : config.url;
     //fetch department map {departmentName: { path: url, isUg: bool}}
     const departmentMap = await getDepartmentMap(targetUrl);
-    console.log('Updating CourseList');
+    CLL.log(threadName, 'Fetch Update', 'Updating CourseList');
     const fetchPromiseList = [];
     for (const [deptName, dept] of Object.entries(departmentMap)) {
         if (config.test) {
@@ -95,7 +102,7 @@ async function fetchAndUpdateCourseList() {
         });
     }
     await Promise.allSettled(fetchPromiseList);
-    console.log('Course List Update Complete');
+    CLL.log(threadName, 'Fetch Update', 'Course List Update Complete');
 }
 
 module.exports = { fetchAndUpdateCourseList };

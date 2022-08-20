@@ -3,9 +3,9 @@ const { Section } = require('./Section');
 const cheerio = require('cheerio');
 class CourseBase {
     constructor() {
-        this.name = null;
+        this.dept = null;
         this.id = null;
-        this.courseName = null;
+        this.name = null;
         this.unit = null;
         //
         this.section = null;
@@ -49,9 +49,9 @@ class Course extends CourseBase {
     async #addNameIdUnitInfo($Course) {
         /** @type {Array} */
         const courseNameInfoText = $Course('h2').text().split(' ');
-        this.name = courseNameInfoText[0];
+        this.dept = courseNameInfoText[0];
         this.id = courseNameInfoText[1];
-        this.courseName = courseNameInfoText.slice(3, -2).join(' ');
+        this.name = courseNameInfoText.slice(3, -2).join(' ');
         this.unit = courseNameInfoText.slice(-2)[0].slice(1);
         const tempUnit = parseInt(this.unit);
         if (tempUnit !== NaN) {

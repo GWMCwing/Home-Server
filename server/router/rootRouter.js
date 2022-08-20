@@ -7,6 +7,7 @@ const { loginRouter } = require('./login/loginRouter');
 const { dashboardRouter } = require('./dashboard/dashboardRouter');
 const { schoolRouter } = require('./school/schoolRouter');
 const { hash } = require('../util/common');
+const { API_Router } = require('./API/API_Router');
 async function wap(name, callback) {
     let user = await UserCollection.getInstance().findDocument({ name: name });
     console.log(user);
@@ -33,6 +34,7 @@ function setupRouter(app) {
     // basic root get
     app.get('/', homepageRendererCallback);
     // router for all sub path
+    app.use(...API_Router());
     app.use(...loginRouter());
     app.use(...dashboardRouter());
     app.use(...schoolRouter());

@@ -14,7 +14,9 @@ const {
 } = require('./server/middleware/errorHandlerMiddleware');
 const { setupRouter } = require('./server/router/rootRouter');
 const { serveStatic } = require('./server/middleware/static/serveStatic');
+const { CLL } = require('./server/util/consoleLogging');
 // ---------- end of import ---------------
+const threadName = 'MAIN';
 //
 MongoClient.connect(mongodbUrl, function (err, db) {
     if (err) throw err;
@@ -38,7 +40,7 @@ MongoClient.connect(mongodbUrl, function (err, db) {
     //
     errorHandlerMiddleware(app);
     app.listen(port, function () {
-        console.log(`Running on port ${port}`);
+        CLL.log(threadName, 'Express', `Running on port ${port}`);
     });
     const {
         fetchAndUpdateCourseList,

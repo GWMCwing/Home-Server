@@ -9,28 +9,28 @@ class ConsoleLogWrapper {
     constructor() {}
     // default functions
     // [HH:MM:SS] [LABEL/TYPE] [MSG]
-    async assert(label, ...param) {
+    async assert(thread, label, ...param) {
         const prefix = '';
         process.stdout.write(prefix);
         console.assert(...param);
     }
-    async debug(label, ...param) {
-        const prefix = `${this.#time()} [${label}/DEBUG] `;
+    async debug(thread, label, ...param) {
+        const prefix = `${this.#time()} [${thread}/DEBUG] [${label}] `;
         process.stdout.write(prefix);
         console.debug(...param);
     }
-    async log(label, ...param) {
-        const prefix = `${this.#time()} [${label}/INFO] `;
+    async log(thread, label, ...param) {
+        const prefix = `${this.#time()} [${thread}/INFO] [${label}] `;
         process.stdout.write(prefix);
         console.log(...param);
     }
-    async warn(label, ...param) {
-        const prefix = `${this.#time()} [${label}/WARN] `;
+    async warn(thread, label, ...param) {
+        const prefix = `${this.#time()} [${thread}/WARN] [${label}] `;
         process.stdout.write(prefix);
         console.warn(...param);
     }
-    async error(label, ...param) {
-        const prefix = `${this.#time()} [${label}/ERROR] `;
+    async error(thread, label, ...param) {
+        const prefix = `${this.#time()} [${thread}/ERROR] [${label}] `;
         process.stdout.write(prefix);
         console.error(...param);
     }
@@ -41,5 +41,5 @@ class ConsoleLogWrapper {
         return `[${dateTimeFormatter.format(new Date())}]`;
     }
 }
-const consoleLogWrapper = new ConsoleLogWrapper();
-module.exports = { consoleLogWrapper };
+const CLL = new ConsoleLogWrapper();
+module.exports = { CLL };

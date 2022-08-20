@@ -14,6 +14,7 @@ class RouterBuilder {
     }
     addRouter(path, router) {
         this.#router.use(path, router);
+        return this;
     }
     addMiddleware(callback) {
         this.#router.use(callback);
