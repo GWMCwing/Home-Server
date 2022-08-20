@@ -1,4 +1,4 @@
-const { RouterBuilder } = require('../routerFactory');
+const { RouterBuilder } = require('../routerBuilder');
 const {
     dashboardRenderer,
 } = require('../../render/dashboard/dashboardRenderer');

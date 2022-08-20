@@ -1,4 +1,4 @@
-const { RouterBuilder } = require('../routerFactory');
+const { RouterBuilder } = require('../routerBuilder');
 const { loginRendererCallback } = require('../../render/login/loginRenderer');
 const {
     earlyLoginMiddleware,
@@ -9,7 +9,10 @@ function loginRouter() {
         .setPath('/login')
         .addMiddleware(earlyLoginMiddleware)
         .addGetRequest('/', loginRendererCallback)
-        .addGetRequest('/auth', loginAuth)
+        .addPostRequest('/auth', loginAuth)
+        .addGetRequest('/auth', (req, res) => {
+            res.redirect('/login');
+        })
         .build();
 }
 module.exports = { loginRouter };

@@ -2,7 +2,6 @@ const userManager = require('../../user/userManager');
 const {
     regenerateSession,
 } = require('../../middleware/authentication/authSession');
-const { UserCollection } = require('../../database/dataBase');
 //TODO regenerate token, update user info in database
 async function loginAuth(req, res) {
     const { name, password } = req.headers;

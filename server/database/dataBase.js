@@ -20,8 +20,8 @@ class MongoDataBase {
         return await this.coll.insertOne(doc);
     }
     //
-    async updateDoc(query, obj) {
-        return await this.coll.updateOne(query, obj);
+    async updateDoc(query, obj, option = {}) {
+        return await this.coll.updateOne(query, { $set: obj }, option);
     }
     async updateMany(query, obj) {
         return await this.coll.updateMany(query, obj);
@@ -46,9 +46,27 @@ class UserCollection extends MongoDataBase {
         return UserCollection.#instance;
     }
 }
+class CourseCollection extends MongoDataBase {
+    /** @type {CourseCollection} */
+    static #instance;
+    constructor(dbClient) {
+        if (CourseCollection.#instance) return CourseCollection.#instance;
+        super(dbClient, 'courseList');
+        CourseCollection.#instance = this;
+    }
+    static getInstance() {
+        return CourseCollection.#instance;
+    }
+}
 /** @type {UserCollection}*/
 let userCollection;
+let courseCollection;
 function initiateDatabaseInterface(db) {
     userCollection = new UserCollection(db);
+    courseCollection = new CourseCollection(db);
 }
-module.exports = { initiateDatabaseInterface, UserCollection };
+module.exports = {
+    initiateDatabaseInterface,
+    UserCollection,
+    CourseCollection,
+};

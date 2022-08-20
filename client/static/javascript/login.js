@@ -1,6 +1,6 @@
 async function submitForm(header) {
     const response = await fetch('/login/auth', {
-        method: 'GET',
+        method: 'POST',
         headers: header,
         mode: 'same-origin',
         credentials: 'include',

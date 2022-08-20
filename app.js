@@ -40,4 +40,8 @@ MongoClient.connect(mongodbUrl, function (err, db) {
     app.listen(port, function () {
         console.log(`Running on port ${port}`);
     });
+    const {
+        fetchAndUpdateCourseList,
+    } = require('./server/tasks/courseList/fetchCourseList');
+    fetchAndUpdateCourseList();
 });

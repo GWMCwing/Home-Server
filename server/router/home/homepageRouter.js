@@ -1,4 +1,4 @@
-const { RouterBuilder } = require('../routerFactory');
+const { RouterBuilder } = require('../routerBuilder');
 const {
     homepageRendererCallback,
 } = require('../../render/homepage/homepageRender');

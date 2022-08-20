@@ -6,14 +6,18 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title Login
     link(rel='stylesheet', href='/resource/css/structure/general.css')
+    link(rel='stylesheet', href='/resource/css/login/login.css')
     script(src="/resource/javascript/login.js") 
     body 
         include ../../structure/navBar.pug
         //- 
         //- 
-        form(id = "loginForm" name="loginForm") 
-            input(type="text", name="name",autocomplete="off", required)
-            input(type="password", name="password",autocomplete="off", required)
-            input(type="submit", value="Submit" )
+        .formWrapper
+            form(id = "loginForm" name="loginForm") 
+                label(for="formNameInput") User Name
+                input(id="formNameInput",type="text", name="name",autocomplete="off", required)
+                label(for="formPasswordInput") Password
+                input(id="formPasswordInput",type="password", name="password",autocomplete="off", required)
+                input(type="submit", value="Submit" )
         //- 
         include ../../structure/footer.pug

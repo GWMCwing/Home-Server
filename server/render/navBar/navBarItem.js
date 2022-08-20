@@ -5,6 +5,9 @@ const navBarItem = {
     Home: {
         link: '/',
     },
+    Timetable: {
+        link: '/school/timetable',
+    },
     About: {
         link: '/about',
     },

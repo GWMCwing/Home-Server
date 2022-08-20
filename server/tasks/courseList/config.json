@@ -1,0 +1,9 @@
+{
+    "test":false,
+    "testUrl":"http://localhost:5555",
+    "baseUrl":"http://w5.ab.ust.hk",
+    "url": "http://w5.ab.ust.hk/wcq/cgi-bin",
+    "sleepTime": 250,
+    "enable": true
+}
+
