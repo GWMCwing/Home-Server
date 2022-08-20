@@ -7,10 +7,20 @@ class MongoDataBase {
     }
     //
     async findDocument(query, options) {
-        return await this.coll.findOne(query, options);
+        return await this.coll.findOne(query, {
+            projection: {
+                _id: 0,
+            },
+            ...options,
+        });
     }
     async findMultipleDoc(query, options) {
-        return await this.coll.find(query, options);
+        return await this.coll.find(query, {
+            projection: {
+                _id: 0,
+            },
+            ...options,
+        });
     }
     //
     async insertMultipleDoc(doc, options) {

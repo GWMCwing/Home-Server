@@ -25,7 +25,10 @@ async function courseListQuery(req, res) {
         // console.log(JSON.stringify(course));
         courseListRes.push(course);
     });
-    console.log(courseListRes);
+    if (courseListRes.length === 0) {
+        res.json({ error: true });
+        return;
+    }
     res.json({ error: false, list: [...courseListRes] });
 }
 function courseList_API_Router() {
