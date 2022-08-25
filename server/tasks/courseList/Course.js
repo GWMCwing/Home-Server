@@ -26,22 +26,27 @@ class CourseBase {
         this.ILO = null;
         //
         this.requireExtraChecking = false;
+        this.school = null;
     }
 }
 class Course extends CourseBase {
     constructor($Course, semesterId) {
         super();
     }
-    async buildAll($Course, semesterId) {
+    async buildAll($Course, semesterId, school) {
         await Promise.allSettled([
             this.#addSemester(semesterId),
             this.#addNameIdUnitInfo($Course),
             this.#addCourseInfo($Course),
             this.#addSection($Course),
+            this.#setSchool(school),
         ]);
         // this.section.forEach((el, i) => {
         //     console.log(el.dateTime);
         // });
+    }
+    #setSchool(school) {
+        this.school = school;
     }
     #addSemester(semesterId) {
         this.semester = semesterId;

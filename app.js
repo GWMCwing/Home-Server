@@ -15,6 +15,9 @@ const {
 const { setupRouter } = require('./server/router/rootRouter');
 const { serveStatic } = require('./server/middleware/static/serveStatic');
 const { CLL } = require('./server/util/consoleLogging');
+const {
+    fetchAndUpdateCourseList_HKUST,
+} = require('./server/tasks/courseList/fetchCourseList_HKUST');
 // ---------- end of import ---------------
 const threadName = 'MAIN';
 //
@@ -42,8 +45,5 @@ MongoClient.connect(mongodbUrl, function (err, db) {
     app.listen(port, function () {
         CLL.log(threadName, 'Express', `Running on port ${port}`);
     });
-    const {
-        fetchAndUpdateCourseList,
-    } = require('./server/tasks/courseList/fetchCourseList');
-    fetchAndUpdateCourseList();
+    fetchAndUpdateCourseList_HKUST();
 });

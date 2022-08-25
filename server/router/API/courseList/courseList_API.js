@@ -3,7 +3,8 @@ const { CourseCollection } = require('../../../database/dataBase');
 async function courseListQuery(req, res) {
     const dept = req.query.dept;
     const semester = req.query.semester;
-    if (dept === undefined || semester === undefined) {
+    const school = req.query.school;
+    if (dept === undefined || semester === undefined || school === undefined) {
         res.json({ error: true });
         return;
     }
@@ -12,6 +13,7 @@ async function courseListQuery(req, res) {
             {
                 dept: dept,
                 semester: semester,
+                school: school,
             },
             {
                 sort: { id: 1 },

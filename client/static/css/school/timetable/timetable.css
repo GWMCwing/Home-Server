@@ -1,0 +1,163 @@
+:root{
+    --timetable-flex: 50;
+}
+body{
+    background-color: white;
+    color: black;
+    height: 100vh;
+}
+.no-select{  
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+.timetable-container{
+    height:100%;
+    width:95%;
+}
+.timetable-panel{
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+    padding: 25px;
+    align-content: stretch;
+}
+.timetable-panel > .left-panel{
+    margin-top:16px;
+    width:22.5%;
+}
+#course-list-container{
+    max-height: 80%;
+    width:100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#course-list-container > ul{
+    padding: 0;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+#course-list-container > * > li{
+    width:48%;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: center;
+    border: 1px solid #aaa;
+    font-weight: bold;
+}
+#course-list-container > * > li:hover{
+    background-color: #eee;
+}
+#course-list-container > * > li.full-width{
+    width:100%;
+}
+/* 
+ */
+/*  */
+.timetable-panel > #planner{
+    width:80%;
+}
+li{
+    list-style: none;
+}
+#planner > ul{
+    display: flex;
+    justify-content: space-between;
+}
+#planner > ul > li{
+    padding: 10px;
+}
+/* 
+ */
+.planner-timetable > .day-of-week{
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+.planner-timetable > .day-of-week > li.empty{
+    flex-grow: 1;
+    flex-basis: 1;
+}
+.planner-timetable > .day-of-week > li{
+    flex-grow: var(--timetable-flex);
+    width:100%;
+}
+.planner-timetable > .day-of-week > li > p{
+    margin-top:0;
+    margin-bottom:0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.planner-timetable > .day-of-week > li > span{
+    font-size: 0.85rem;
+    color: rgb(102, 102, 102)
+}
+.planner-timetable{
+    padding-bottom: 50px;
+    height:70%
+}
+.planner-timetable>.timetable{
+    display:flex;
+    justify-content: center;
+    height: 100%;
+}
+.planner-timetable>.timetable > .time{
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    align-content: stretch;
+    padding-left: 0;
+    flex-grow: 1;
+    width:12.5%;
+    margin-bottom:0;
+    margin-top:0;
+}
+.planner-timetable>.timetable > .time > li{
+    height: 100%;
+    margin-top:-8px;
+    font-weight: 600;
+}
+.planner-timetable>.timetable > .grid{
+    display:flex;
+    flex-grow: var(--timetable-flex);
+    width:87.5%;
+    border-top: 1px solid #ddd;
+}
+.planner-timetable>.timetable > .grid > div{
+    display:flex;
+    flex-direction: column;
+    width:100%;
+    border-right: 1px solid #ddd;
+}
+.planner-timetable>.timetable > .grid > div.weekend{
+    background-color: #eee;
+}
+.planner-timetable>.timetable > .grid > div:first-child{
+    border-left: 1px solid #ddd;
+}
+/*  */
+.planner-timetable>.timetable > .grid > div > div{
+    display:flex;
+    position: relative;
+    height: 100%;
+    border-bottom: 1px solid #eee;
+}
+
+.planner-timetable>.timetable > .grid > div > div:nth-child(2n){
+    border-bottom-color:#ddd;
+}
+/*! decided by js, inline css */
+.planner-timetable>.timetable > .grid > div > div > div{
+    position:absolute;
+    height:200%;
+    width: 100%;
+    z-index: 2;
+}

@@ -36,7 +36,7 @@ async function getDepartmentMap(url) {
 async function parseCourseInfo(elementHTML, semesterId, callback) {
     const $course = cheerio.load(elementHTML, null, false);
     const course = new Course($course, semesterId);
-    await course.buildAll($course, semesterId);
+    await course.buildAll($course, semesterId, 'HKUST');
     callback(course);
 }
 async function appendToDataBase(course) {
@@ -76,7 +76,7 @@ async function fetchCourseList(url, isUg) {
         });
     });
 }
-async function fetchAndUpdateCourseList() {
+async function fetchAndUpdateCourseList_HKUST() {
     CLL.log(threadName, 'Fetch Update', 'Fetching CourseList');
     const config = getConfig();
     if (config === false) {
@@ -105,4 +105,4 @@ async function fetchAndUpdateCourseList() {
     CLL.log(threadName, 'Fetch Update', 'Course List Update Complete');
 }
 
-module.exports = { fetchAndUpdateCourseList };
+module.exports = { fetchAndUpdateCourseList_HKUST };

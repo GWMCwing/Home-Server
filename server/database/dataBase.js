@@ -43,6 +43,9 @@ class MongoDataBase {
     async deleteMany(query) {
         return await this.coll.deleteMany(query);
     }
+    async distinct(field, query) {
+        return await this.coll.distinct(field, query);
+    }
 }
 class UserCollection extends MongoDataBase {
     /** @type {UserCollection} */
