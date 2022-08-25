@@ -70,7 +70,10 @@ class Section extends SectionBase {
             i < $tdListLength;
             i++
         ) {
-            const text = $tdList[i][1].text();
+            let text = $tdList[i][1].text();
+            if (i) {
+                text = $tdList[i][0].text();
+            }
             if (text === 'TBA') {
                 this.dateTime.push({
                     DOW: 'TBA',
@@ -83,7 +86,7 @@ class Section extends SectionBase {
                     const DOW = textList[0];
                     const DOWList = [];
                     for (let j = 0; j < DOW.length; j += 2) {
-                        DOWList.push(DOW.substring(i, i + 2));
+                        DOWList.push(DOW.substring(j, j + 2));
                     }
                     return DOWList;
                 })();
