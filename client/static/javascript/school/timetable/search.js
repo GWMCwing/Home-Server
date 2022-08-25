@@ -45,7 +45,7 @@ async function selectDept(dept) {
         tempLi.setAttribute('dept', course.dept);
         tempLi.setAttribute('courseId', course.id);
         tempLi.addEventListener('click', (ev) => {
-            timetable.selectCourse(course.dept, course.id);
+            timetable.selectCourseToDisplay(course.dept, course.id);
         });
         //
         const title = document.createElement('p');

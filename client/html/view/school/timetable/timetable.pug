@@ -23,8 +23,8 @@ html(lang="en")
                     #course-list-container
                         ul#main-selector-list
                             li.collection.heading.full-width.no-select Collection
-                            li.favorite.icon-favorites.full-width.no-select favorites
-                            li.plan.icon-plan.full-width.no-select plan
+                            li.favorite.icon-favorites.full-width.no-select Favorites
+                            li.plan.icon-plan.full-width.no-select Plan
                             li.subject.heading.full-width.no-select Subject
                             for dept in deptList
                                 li.dept.no-select(onclick='selectDept("'+dept+'")')= dept
@@ -32,30 +32,30 @@ html(lang="en")
                             li.back-button.no-select.full-width(onclick='courseListBack()') Back
                 #planner
                     ul.planner-menu 
-                        li.semester= semesterName
-                        li.table-dropdown tableName
+                        li.semester.no-select= semesterName
+                        li.table-dropdown.no-select TableName
                     ul.planner-sub-menu
-                        li.button.add-constraint Add Time Constraint
-                        li.button.suggest-timetable Suggest Timetables 
-                        li.button.other-section Other Sections 
-                        li.credits 0 credits
-                    .planner-detail
-                    .planner-suggestion
+                        li.button.add-constraint.no-select Add Time Constraint
+                        li.button.suggest-timetable.no-select Suggest Timetables 
+                        li.button.other-section.no-select Other Sections 
+                        li.credits.no-select 0 credits
+                    #planner-detail.planner-detail
+                    #planner-suggestion.planner-suggestion
                     .planner-timetable 
                         ul.day-of-week
                             li.empty
                                 span
                             for day_of_week in ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
-                                li
+                                li.no-select
                                     p=day_of_week
-                                    span 
+                                    span
                                         span.day-of-week-hour 0.0 hours
                         .timetable 
-                            ul.time 
+                            ul.time.no-select
                                 for time in timetableTime
                                     li=time
                                     li.empty
-                            .grid 
+                            #grid.grid 
                                 - var i = 0;
                                 while i < 7
                                     div(class=i > 4 ? 'weekend' : '')

@@ -23,7 +23,8 @@ body{
     display: flex;
     height: 100%;
     overflow: hidden;
-    padding: 25px;
+    padding-left: 25px;
+    padding-right: 25px;
     align-content: stretch;
 }
 .timetable-panel > .left-panel{
@@ -31,7 +32,7 @@ body{
     width:22.5%;
 }
 #course-list-container{
-    max-height: 80%;
+    max-height: 90%;
     width:100%;
     overflow-y: auto;
     overflow-x: hidden;
@@ -60,6 +61,7 @@ body{
  */
 /*  */
 .timetable-panel > #planner{
+    height:100%;
     width:80%;
 }
 li{
@@ -79,7 +81,6 @@ li{
     display: flex;
     justify-content: center;
     text-align: center;
-    border-bottom: 1px solid #ddd;
 }
 .planner-timetable > .day-of-week > li.empty{
     flex-grow: 1;
@@ -138,7 +139,7 @@ li{
     border-right: 1px solid #ddd;
 }
 .planner-timetable>.timetable > .grid > div.weekend{
-    background-color: #eee;
+    background-color: rgb(248, 248, 248);
 }
 .planner-timetable>.timetable > .grid > div:first-child{
     border-left: 1px solid #ddd;
