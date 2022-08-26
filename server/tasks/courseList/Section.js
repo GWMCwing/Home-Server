@@ -61,7 +61,12 @@ class Section extends SectionBase {
         const textList = text.split('(');
         this.name = textList[0].trimEnd();
         this.id = textList[1].substring(0, textList[1].length - 1);
-        this.type = this.name[0];
+        this.type = '';
+        for (let i = 0; i < this.name.length; i++) {
+            if (this.name[i].toUpperCase() != this.name[i].toLowerCase())
+                this.type += this.name[i];
+            else break;
+        }
     }
     async #addDateTime($Section, $tdList, trCount) {
         this.dateTime = [];
