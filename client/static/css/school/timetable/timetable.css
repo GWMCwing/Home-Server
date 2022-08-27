@@ -21,8 +21,8 @@ body{
 }
 .timetable-panel{
     display: flex;
-    height: 100%;
-    overflow: hidden;
+    height: 85vh;
+    min-height: 0;
     padding-left: 25px;
     padding-right: 25px;
     align-content: stretch;
@@ -61,7 +61,6 @@ body{
  */
 /*  */
 .timetable-panel > #planner{
-    height:100%;
     width:80%;
 }
 li{
@@ -76,11 +75,16 @@ li{
 }
 /* 
  */
+.planner-timetable{
+    min-height: 0;
+}
 .planner-timetable > .day-of-week{
     padding: 0;
     display: flex;
     justify-content: center;
     text-align: center;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 .planner-timetable > .day-of-week > li.empty{
     flex-grow: 1;
@@ -104,6 +108,7 @@ li{
 .planner-timetable{
     padding-bottom: 50px;
     height:70%
+
 }
 .planner-timetable>.timetable{
     display:flex;
@@ -158,7 +163,66 @@ li{
 /*! decided by js, inline css */
 .planner-timetable>.timetable > .grid > div > div > div{
     position:absolute;
-    height:200%;
     width: 100%;
     z-index: 2;
+}
+/* 
+ */
+.section-outer{
+    overflow: hidden;
+    border: 1px solid red;
+    transition: max-height 1s ease;
+}
+.section-outer.hovering{
+    max-height: 100vh !important;
+    max-width:  100vw !important;
+}
+#planner-detail{
+    height: 30%;
+    overflow: hidden;
+    margin: 8px;
+    margin-bottom: 0px;
+}
+#planner-detail > .title-container{
+    flex-basis: 100%;
+}
+#planner-detail-box-container{
+    display:flex;
+    flex-basis: 100%;
+    align-content: stretch;
+    width:100%;
+    height:65%;
+    overflow-x: auto;
+}
+.planner-detail-type-box{
+    overflow-y: auto;
+    margin: 16px;
+    margin-bottom: 4px;
+    width: 100%;
+    flex: 0 1 40%;
+}
+.planner-detail-section-box {
+    display:flex;
+    font-size: small;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+.planner-detail-section-sub-box-time{
+    text-align: right;
+}
+.planner-detail-section-sub-box-time-multi{
+    flex-basis: 100%;
+}
+#planner-detail-box-menu {
+    margin: 0;
+}
+#planner-detail-box-menu > li {
+    float: left;
+    padding-right: 32px;
+}
+#planner-detail-box-menu > li.cancel{
+    float: right;
+    padding-right: 0px;
 }

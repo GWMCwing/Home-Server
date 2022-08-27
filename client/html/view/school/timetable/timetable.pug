@@ -39,7 +39,17 @@ html(lang="en")
                         li.button.suggest-timetable.no-select Suggest Timetables 
                         li.button.other-section.no-select Other Sections 
                         li.credits.no-select 0 credits
-                    #planner-detail.planner-detail
+                    #planner-detail.planner-detail.no-select
+                        .title-container 
+                            span#planner-detail-id-name.id-name title
+                            span#planner-detail-name.name long name 
+                            span#planner-detail-tag.tag tag
+                        #planner-detail-box-container.detail-box-container
+                        ul#planner-detail-box-menu 
+                            li.button.add Add 
+                            li.button.remove Remove
+                            li.button.swap Swap
+                            li.button.cancel Cancel
                     #planner-suggestion.planner-suggestion
                     .planner-timetable 
                         ul.day-of-week
