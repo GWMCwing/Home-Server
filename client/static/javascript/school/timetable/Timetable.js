@@ -1,4 +1,13 @@
 class DetailDomBuilder {
+    /**
+     *
+     * @param {Timetable} timetable
+     * @param {String} school
+     * @param {String} dept
+     * @param {String} id
+     * @param {Section[]} parsedSectionList
+     * @returns {HTMLElement} detailBox dom
+     */
     static buildDetailBox(timetable, school, dept, id, parsedSectionList) {
         // HKUST [L,T,LA,R] CUHK???
         let HKUST_TYPE_LIST = ['L', 'T', 'LA', 'R'];
@@ -25,6 +34,15 @@ class DetailDomBuilder {
         }
         return detailBoxChild;
     }
+    /**
+     *
+     * @param {Timetable} timetable
+     * @param {String} dept
+     * @param {String} id
+     * @param {String} section
+     * @param {Number} j
+     * @returns {HTMLElement} sectionBox dom
+     */
     static buildDetailSectionBox(timetable, dept, id, section, j) {
         const sectionBox = document.createElement('div');
         sectionBox.className = 'planner-detail-section-box';
@@ -55,12 +73,23 @@ class DetailDomBuilder {
         };
         return sectionBox;
     }
+    /**
+     *
+     * @param {Section} section
+     * @returns {HTMLElement} sectionType dom
+     */
     static buildDetailSectionType(section) {
         const sectionType = document.createElement('div');
         sectionType.className = 'planner-detail-section-sub-box-title';
         sectionType.textContent = section.name;
         return sectionType;
     }
+    /**
+     *
+     * @param {Section} section
+     * @param {Number} k
+     * @returns {HTMLElement} sectionTime dom
+     */
     static buildDetailSectionTime(section, k) {
         const dateTime = section.dateTime[k];
         const sectionTime = document.createElement('div');
@@ -76,6 +105,11 @@ class DetailDomBuilder {
     }
 }
 class TimetableBase {
+    /**
+     *
+     * @param {String} DOW
+     * @returns index of DOW in DAY_LIST
+     */
     getDowDomIndex(DOW) {
         switch (DOW) {
             case 'Mo':
@@ -96,6 +130,12 @@ class TimetableBase {
                 return false;
         }
     }
+    /**
+     *
+     * @param {String} startTime
+     * @param {String} endTime
+     * @returns {number} height of Dom
+     */
     timeToRatio(startTime, endTime) {
         const startHr =
             parseInt(startTime.substring(0, 2)) +
@@ -114,6 +154,11 @@ class TimetableBase {
         console.log(startHr, startMin, endHr, endMin);
         return (endHr - startHr) * 100 + ((endMin - startMin) * 5) / 3;
     }
+    /**
+     *
+     * @param {String} startTime
+     * @returns {number} index of the of the dom in the grid cell DOW
+     */
     timeToGridCellIndex(startTime) {
         const hr = parseInt(startTime.substring(0, 2));
         const min = parseInt(startTime.substring(3, 5));
@@ -143,16 +188,32 @@ class Timetable extends TimetableBase {
         this.suggestionDiv;
         this.#setup();
     }
-    setDeptList(dept, list) {
+    /**
+     *
+     * @param {String} dept
+     * @param {Course[]} courseList
+     */
+    setDeptList(dept, courseList) {
         const tempObj = {};
-        for (let i = 0; i < list.length; i++) {
-            tempObj[list[i].id] = list[i];
+        for (let i = 0; i < courseList.length; i++) {
+            tempObj[courseList[i].id] = courseList[i];
         }
         this.deptList[dept] = tempObj;
     }
+    /**
+     *
+     * @param {String} dept
+     * @param {String} id
+     */
     selectCourseToDisplay(dept, id) {
         this.displayCourseDetail(dept, id);
     }
+    /**
+     *
+     * @param {Boolean} displayEnable
+     * @param {String} dept
+     * @param {String} id
+     */
     #setDetailDiv(displayEnable, dept, id) {
         if (displayEnable) {
             document.getElementById('planner-detail').style.display = 'block';
@@ -166,6 +227,11 @@ class Timetable extends TimetableBase {
         document.getElementById('planner-detail-name').textContent =
             this.deptList[dept][id].name;
     }
+    /**
+     *
+     * @param {String} dept
+     * @param {String} id
+     */
     displayCourseDetail(dept, id) {
         const sectionList = this.deptList[dept][id].section;
         const parsedSectionList = this.#parseToSectionType(sectionList);
@@ -187,10 +253,18 @@ class Timetable extends TimetableBase {
         });
         this.updateTempDisplay();
     }
+    /**
+     *
+     * @param {HTMLelement} dom
+     */
     hoverInSelectDetail(dom) {
         dom.classList.add('planner-detail-section-box-hover-selected');
         this.updateTempDisplay();
     }
+    /**
+     *
+     * @param {HTMLelement} dom
+     */
     hoverOutSelectDetail(dom) {
         dom.classList.remove('planner-detail-section-box-hover-selected');
         this.updateTempDisplay();
@@ -212,6 +286,7 @@ class Timetable extends TimetableBase {
         this.updateTempDisplay();
     }
     updateTempDisplay() {
+        // TODO
         // remove tempDisplay DOM
         // restore inGrid
         // get hover-selected section
@@ -219,8 +294,18 @@ class Timetable extends TimetableBase {
         // add to tempDisplay
         // remove from inGrid
     }
-    #addToInGrid(dept, id, sectionList) {}
-    // tempSelectSection(dom, dept, id) {}
+    /**
+     *
+     * @param {String} dept
+     * @param {String} id
+     * @param {Section[]} sectionList Selected Section list
+     */
+    addToInGrid(dept, id, sectionList) {}
+    /**
+     *
+     * @param {String} dept
+     * @param {String} id
+     */
     #displaySectionTEST(dept, id) {
         //! test only
         const sectionList = this.deptList[dept][id].section;
@@ -233,6 +318,11 @@ class Timetable extends TimetableBase {
             this.timeToGridCellIndex(displayDomList[0].startTime)
         ].appendChild(displayDomList[0].div);
     }
+    /**
+     *
+     * @param {Section[]} sectionList
+     * @returns
+     */
     #parseToSectionType(sectionList) {
         const tempSectionType = {};
         for (let i = 0; i < sectionList.length; i++) {
@@ -245,7 +335,15 @@ class Timetable extends TimetableBase {
         }
         return tempSectionType;
     }
+    /**
+     *
+     * @param {Section[]} sectionList
+     */
     #isAllConflict(sectionList) {}
+    /**
+     *
+     * @param {Section} section
+     */
     #isConflict(section) {}
     #setup() {
         const gridDom = document.getElementById('grid');
@@ -261,6 +359,12 @@ class Timetable extends TimetableBase {
 
 class sectionDomBuilder extends TimetableBase {
     static baseDom = null;
+    /**
+     *
+     * @param {String} dept
+     * @param {String} id
+     * @param {Section} section
+     */
     constructor(dept, id, section) {
         super();
         this.dept = dept;
@@ -299,6 +403,11 @@ class sectionDomBuilder extends TimetableBase {
                 p.section-typeNum
                 p.section-id
                 p.section-time
+     */
+    /**
+     *
+     * @param {Section} section
+     * @param {Number} dateTimeCount
      */
     #createSectionDomClass(section, dateTimeCount) {
         for (let i = 0; i < dateTimeCount; i++) {

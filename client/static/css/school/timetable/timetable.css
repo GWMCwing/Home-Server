@@ -57,6 +57,21 @@ body{
 #course-list-container > * > li.full-width{
     width:100%;
 }
+#course-selector-list > li:not(:first-child) > p:nth-child(1){
+    /* title */
+    margin: 0;
+    margin-bottom: 8px;
+    margin-left: 4px;
+    text-align: left;
+    color: blue;
+}
+#course-selector-list > li:not(:first-child) > p:nth-child(2){
+    /* name */
+    margin: 0;
+    margin-left: 4px;
+    color: gray;
+    text-align: left;
+}
 /* 
  */
 /*  */
@@ -206,8 +221,13 @@ li{
     font-size: small;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-top: 8px;
+    /* margin-top: 8px;
     margin-bottom: 8px;
+    margin-right: 4px; */
+    margin:8px;
+}
+.planner-detail-section-sub-box-title{
+    margin-left:8px;
 }
 .planner-detail-section-sub-box-time{
     text-align: right;

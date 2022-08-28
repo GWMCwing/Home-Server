@@ -1,5 +1,10 @@
-let timetable;
+var timetable;
 //
+/**
+ *
+ * @param {String} dept
+ * @returns {Course[]} course list of the dept
+ */
 async function getCourseList(dept) {
     const url = new URL(
         window.location.protocol +
@@ -27,6 +32,11 @@ async function getCourseList(dept) {
     console.log(courseList);
     return courseList;
 }
+//TODO Factorize
+/**
+ *
+ * @param {String} dept
+ */
 async function selectDept(dept) {
     const courseList = await getCourseList(dept);
     timetable.setDeptList(dept, courseList.list);
@@ -49,17 +59,8 @@ async function selectDept(dept) {
         });
         //
         const title = document.createElement('p');
-        title.style.margin = 0;
-        title.style.marginBottom = '8px';
-        title.style.marginLeft = '4px';
-        title.style.textAlign = 'left';
-        title.style.color = 'blue';
         title.textContent = `${course.dept} ${course.id}`;
         const name = document.createElement('p');
-        name.style.margin = 0;
-        name.style.marginLeft = '4px';
-        name.style.color = 'gray';
-        name.style.textAlign = 'left';
         name.textContent = `${course.name}`;
         //
         tempLi.appendChild(title);
