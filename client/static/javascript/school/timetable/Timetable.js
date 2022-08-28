@@ -1,5 +1,82 @@
+class DetailDomBuilder {
+    static buildDetailBox(timetable, school, dept, id, parsedSectionList) {
+        // HKUST [L,T,LA,R] CUHK???
+        let HKUST_TYPE_LIST = ['L', 'T', 'LA', 'R'];
+        const detailBoxChild = [];
+        for (let i = 0; i < HKUST_TYPE_LIST.length; i++) {
+            if (parsedSectionList[HKUST_TYPE_LIST[i]]) {
+                // display section
+                const sectionList = parsedSectionList[HKUST_TYPE_LIST[i]];
+                const sectionTypeBox = document.createElement('div');
+                sectionTypeBox.classList.add('planner-detail-type-box');
+                for (let j = 0; j < sectionList.length; j++) {
+                    const section = sectionList[j];
+                    const sectionBox = DetailDomBuilder.buildDetailSectionBox(
+                        timetable,
+                        dept,
+                        id,
+                        section,
+                        j
+                    );
+                    sectionTypeBox.appendChild(sectionBox);
+                }
+                detailBoxChild.push(sectionTypeBox);
+            }
+        }
+        return detailBoxChild;
+    }
+    static buildDetailSectionBox(timetable, dept, id, section, j) {
+        const sectionBox = document.createElement('div');
+        sectionBox.className = 'planner-detail-section-box';
+        if (j == 0) {
+            sectionBox.classList.add('planner-detail-section-box-selected');
+        }
+        //
+        const sectionType = DetailDomBuilder.buildDetailSectionType(section);
+        sectionBox.appendChild(sectionType);
+        //
+        for (let k = 0; k < section.dateTime.length; k++) {
+            const sectionTime = DetailDomBuilder.buildDetailSectionTime(
+                section,
+                k
+            );
+            sectionBox.appendChild(sectionTime);
+        }
+        // on hover
+        sectionBox.onmouseenter = () => {
+            timetable.hoverInSelectDetail(sectionBox);
+        };
+        sectionBox.onmouseleave = () => {
+            timetable.hoverOutSelectDetail(sectionBox);
+        };
+        // on click
+        sectionBox.onclick = () => {
+            timetable.selectDetailSection(sectionBox);
+        };
+        return sectionBox;
+    }
+    static buildDetailSectionType(section) {
+        const sectionType = document.createElement('div');
+        sectionType.className = 'planner-detail-section-sub-box-title';
+        sectionType.textContent = section.name;
+        return sectionType;
+    }
+    static buildDetailSectionTime(section, k) {
+        const dateTime = section.dateTime[k];
+        const sectionTime = document.createElement('div');
+        sectionTime.className = 'planner-detail-section-sub-box-time';
+        if (k > 0) {
+            sectionTime.classList.add(
+                'planner-detail-section-sub-box-time-multi'
+            );
+        }
+        sectionTime.textContent = `${dateTime.startTime} - ${dateTime.endTime}`;
+        //
+        return sectionTime;
+    }
+}
 class TimetableBase {
-    getDowDom(DOW) {
+    getDowDomIndex(DOW) {
         switch (DOW) {
             case 'Mo':
                 return 0;
@@ -37,7 +114,7 @@ class TimetableBase {
         console.log(startHr, startMin, endHr, endMin);
         return (endHr - startHr) * 100 + ((endMin - startMin) * 5) / 3;
     }
-    timeToGridCell(startTime) {
+    timeToGridCellIndex(startTime) {
         const hr = parseInt(startTime.substring(0, 2));
         const min = parseInt(startTime.substring(3, 5));
         let index;
@@ -58,16 +135,13 @@ class Timetable extends TimetableBase {
         this.credit = 0;
         this.deptList = {};
         this.inPlan = {}; // {dept:{id:{dept, id}}}
-        this.inGrid = {}; // {dept:{id:{dept, id, choseSection[], element[]}}}
+        this.inGrid = {}; // {dept:{id:{dept, id, choseSection[], elementList[]}}}
         this.favorite = {}; // {dept:{id:{dept,id}}}
-        this.hoverDisplay = {}; // {dept:{id:{dept, id, choseSection[], element[]}}
-        this.gridDom = [];
+        this.tempDisplay = {}; // {dept:{id:{dept, id, choseSection[], elementList[]}}
+        this.gridDOWDom = [];
         this.detailDiv;
         this.suggestionDiv;
         this.#setup();
-    }
-    static hoverSimilar(dom) {
-        // TODO
     }
     setDeptList(dept, list) {
         const tempObj = {};
@@ -79,59 +153,74 @@ class Timetable extends TimetableBase {
     selectCourseToDisplay(dept, id) {
         this.displayCourseDetail(dept, id);
     }
-    displayCourseDetail(dept, id) {
-        const sectionList = this.deptList[dept][id].section;
-        const parsedSectionList = this.#parseToSectionType(sectionList);
-        // display title and credits
-        document.getElementById('planner-detail').style.display = 'block';
+    #setDetailDiv(displayEnable, dept, id) {
+        if (displayEnable) {
+            document.getElementById('planner-detail').style.display = 'block';
+        } else {
+            document.getElementById('planner-detail').style.display = 'none';
+            return;
+        }
         document.getElementById(
             'planner-detail-id-name'
         ).textContent = `${dept} ${id}`;
         document.getElementById('planner-detail-name').textContent =
             this.deptList[dept][id].name;
+    }
+    displayCourseDetail(dept, id) {
+        const sectionList = this.deptList[dept][id].section;
+        const parsedSectionList = this.#parseToSectionType(sectionList);
+        // display title and credits
+        this.#setDetailDiv(true, dept, id);
         // wrapper for sections
         const detailBox = document.getElementById(
             'planner-detail-box-container'
         );
         detailBox.innerHTML = '';
-        // HKUST [L,T,LA,R] CUHK???
-        let HKUST_TYPE_LIST = ['L', 'T', 'LA', 'R'];
-        for (let i = 0; i < HKUST_TYPE_LIST.length; i++) {
-            if (parsedSectionList[HKUST_TYPE_LIST[i]]) {
-                // display section
-                const sectionList = parsedSectionList[HKUST_TYPE_LIST[i]];
-                const sectionTypeBox = document.createElement('div');
-                sectionTypeBox.classList.add('planner-detail-type-box');
-                for (let j = 0; j < sectionList.length; j++) {
-                    const section = sectionList[j];
-                    const sectionBox = document.createElement('div');
-                    sectionBox.className = 'planner-detail-section-box';
-                    //
-                    const sectionType = document.createElement('div');
-                    sectionType.className =
-                        'planner-detail-section-sub-box-title';
-                    sectionType.textContent = section.name;
-                    sectionBox.appendChild(sectionType);
-                    //
-                    for (let k = 0; k < section.dateTime.length; k++) {
-                        const dateTime = section.dateTime[k];
-                        const sectionTime = document.createElement('div');
-                        sectionTime.className =
-                            'planner-detail-section-sub-box-time';
-                        if (k > 0) {
-                            sectionTime.classList.add(
-                                'planner-detail-section-sub-box-time-multi'
-                            );
-                        }
-                        sectionTime.textContent = `${dateTime.startTime} - ${dateTime.endTime}`;
-                        sectionBox.appendChild(sectionTime);
-                    }
-                    sectionTypeBox.appendChild(sectionBox);
-                }
-                detailBox.appendChild(sectionTypeBox);
-            }
-        }
+        DetailDomBuilder.buildDetailBox(
+            this,
+            'HKUST',
+            dept,
+            id,
+            parsedSectionList
+        ).forEach((ele) => {
+            detailBox.appendChild(ele);
+        });
+        this.updateTempDisplay();
     }
+    hoverInSelectDetail(dom) {
+        dom.classList.add('planner-detail-section-box-hover-selected');
+        this.updateTempDisplay();
+    }
+    hoverOutSelectDetail(dom) {
+        dom.classList.remove('planner-detail-section-box-hover-selected');
+        this.updateTempDisplay();
+    }
+    /**
+     *
+     * @param {HTMLElement} dom
+     */
+    selectDetailSection(dom) {
+        const previousSelected = dom.parentElement.getElementsByClassName(
+            'planner-detail-section-box-selected'
+        )[0];
+        if (previousSelected) {
+            previousSelected.classList.remove(
+                'planner-detail-section-box-selected'
+            );
+        }
+        dom.classList.add('planner-detail-section-box-selected');
+        this.updateTempDisplay();
+    }
+    updateTempDisplay() {
+        // remove tempDisplay DOM
+        // restore inGrid
+        // get hover-selected section
+        // get all selected sections except type in hover-selected section
+        // add to tempDisplay
+        // remove from inGrid
+    }
+    #addToInGrid(dept, id, sectionList) {}
+    // tempSelectSection(dom, dept, id) {}
     #displaySectionTEST(dept, id) {
         //! test only
         const sectionList = this.deptList[dept][id].section;
@@ -140,13 +229,10 @@ class Timetable extends TimetableBase {
             id,
             sectionList[0]
         ).build();
-        this.gridDom[this.getDowDom(displayDomList[0].DOW)].childNodes[
-            this.timeToGridCell(displayDomList[0].startTime)
+        this.gridDOWDom[this.getDowDomIndex(displayDomList[0].DOW)].childNodes[
+            this.timeToGridCellIndex(displayDomList[0].startTime)
         ].appendChild(displayDomList[0].div);
     }
-
-    async mouseEnterDisplay(dept, id) {}
-    async mouseLeaveDisplay(dept, id) {}
     #parseToSectionType(sectionList) {
         const tempSectionType = {};
         for (let i = 0; i < sectionList.length; i++) {
@@ -161,11 +247,10 @@ class Timetable extends TimetableBase {
     }
     #isAllConflict(sectionList) {}
     #isConflict(section) {}
-
     #setup() {
         const gridDom = document.getElementById('grid');
         for (let i = 0; i < gridDom.childElementCount; i++) {
-            this.gridDom.push(gridDom.children[i]);
+            this.gridDOWDom.push(gridDom.children[i]);
         }
         this.detailDiv = document.getElementById('planner-detail');
         this.suggestionDiv = document.getElementById('planner-suggestion');

@@ -226,3 +226,9 @@ li{
     float: right;
     padding-right: 0px;
 }
+.planner-detail-section-box-selected{
+    background-color: rgba(173, 173, 173, 0.596);
+}
+.planner-detail-section-box-hover-selected{
+    background-color: rgba(104, 104, 255, 0.596);
+}
