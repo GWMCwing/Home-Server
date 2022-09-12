@@ -23,7 +23,7 @@ const threadName = 'MAIN';
 //
 MongoClient.connect(mongodbUrl, function (err, db) {
     if (err) throw err;
-    console.log('Connected to Mongodb');
+    CLL.log(threadName, 'Mongodb', 'Connected to Mongodb');
     if (process.env.NODE_ENV === 'development') {
         app.use(morgan('dev'));
     } else {
@@ -46,4 +46,10 @@ MongoClient.connect(mongodbUrl, function (err, db) {
         CLL.log(threadName, 'Express', `Running on port ${port}`);
     });
     fetchAndUpdateCourseList_HKUST();
+});
+//
+process.on('SIGINT', function () {
+    CLL.log(threadName, 'PROCESS', 'Caught interrupt signal');
+    const i_should_exit = true;
+    if (i_should_exit) process.exit();
 });

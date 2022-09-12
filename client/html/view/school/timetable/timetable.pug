@@ -1,4 +1,4 @@
--var timetableTime = ['8 am','9 am','10 am','11 am','12 am','1 pm','2 pm','3 pm','4 pm','5 pm','6 pm','7 pm','8 pm','9 pm','10 pm']
+-var timetableTime = ['8 am','9 am','10 am','11 am','12 pm','1 pm','2 pm','3 pm','4 pm','5 pm','6 pm','7 pm','8 pm','9 pm','10 pm']
 -var semesterName = '2022-2023 Fall'
 doctype html
 html(lang="en")
@@ -46,10 +46,10 @@ html(lang="en")
                             span#planner-detail-tag.tag tag
                         #planner-detail-box-container.detail-box-container
                         ul#planner-detail-box-menu 
-                            li.button.add Add 
+                            li.button.add('onclick'='timetable.addToSelected()') Add 
                             li.button.remove Remove
                             li.button.swap Swap
-                            li.button.cancel Cancel
+                            li.button.cancel('onclick'='timetable.setDetailDiv(false)') Cancel
                     #planner-suggestion.planner-suggestion
                     .planner-timetable 
                         ul.day-of-week

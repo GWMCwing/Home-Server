@@ -1,17 +1,34 @@
 const express = require('express');
-class RouterBuilder {
+// TODO display routing tree
+class RouterBase {
+    static #routerMap = {};
+    addRouterPath() {}
+}
+class RouterBuilder extends RouterBase {
     #router;
     #path;
     constructor() {
+        super();
         this.#router = express.Router();
     }
     build() {
         return [this.#path, this.#router];
     }
+    /**
+     *
+     * @param {String} path set the path of the router (relative to the parent router)
+     * @returns {RouterBuilder}
+     */
     setPath(path) {
         this.#path = path;
         return this;
     }
+    /**
+     *
+     * @param {String} path set the path of the router (relative to the parent router)
+     * @param {Router} router
+     * @returns {RouterBuilder}
+     */
     addRouter(path, router) {
         this.#router.use(path, router);
         return this;

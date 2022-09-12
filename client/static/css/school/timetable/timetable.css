@@ -88,6 +88,9 @@ li{
 #planner > ul > li{
     padding: 10px;
 }
+#planner > .planner-menu{
+    margin: 0px;
+}
 /* 
  */
 .planner-timetable{

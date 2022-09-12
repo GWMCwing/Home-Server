@@ -1,3 +1,301 @@
+// for parsing data
+class TimetableBase {
+    constructor() {
+        this.credit = 0;
+        /** {dept: {courseId: course}} */
+        this.deptList = {};
+        this.inPlan = {};
+        this.favorite = {};
+    }
+    /**
+     *
+     * @param {String} DOW
+     * @returns index of DOW in DAY_LIST
+     */
+    getDowDomIndex(DOW) {
+        switch (DOW) {
+            case 'Mo':
+                return 0;
+            case 'Tu':
+                return 1;
+            case 'We':
+                return 2;
+            case 'Th':
+                return 3;
+            case 'Fr':
+                return 4;
+            case 'Sa':
+                return 5;
+            case 'Su':
+                return 6;
+            default:
+                return false;
+        }
+    }
+    /**
+     *
+     * @param {String} startTime
+     * @param {String} endTime
+     * @returns {number} height of Dom
+     */
+    timeToRatio(startTime, endTime) {
+        let startHr = parseInt(startTime.substring(0, 2));
+        if (startHr !== 12 && startTime.endsWith('PM')) {
+            startHr += 12;
+        }
+        const startMin = parseInt(startTime.substring(3, 5)) > 0 ? 30 : 0;
+        let endHr = parseInt(endTime.substring(0, 2));
+        if (endHr !== 12 && endTime.endsWith('PM')) {
+            endHr += 12;
+        }
+        let endMin = parseInt(endTime.substring(3, 5));
+        if (endMin > 30) {
+            endMin = 0;
+            endHr += 1;
+        } else if (endMin > 0) {
+            endMin = 30;
+        }
+        let r = (endHr - startHr) * 200 + ((endMin - startMin) / 30) * 100;
+        return r;
+    }
+    /**
+     *
+     * @param {String} startTime
+     * @returns {number} index of the of the dom in the grid cell DOW
+     */
+    timeToGridCellIndex(startTime) {
+        const hr = parseInt(startTime.substring(0, 2));
+        const min = parseInt(startTime.substring(3, 5));
+        let index = hr - 8;
+        if (startTime.endsWith('PM') && hr !== 12) {
+            index += 12;
+        }
+        index *= 2;
+        if (min > 0) {
+            index += 1;
+        }
+        //
+        return index;
+    }
+    /**
+     *
+     * @param {Section[]} sectionList
+     * @returns {parsedSection[]} {sectionType: Section[]}
+     */
+    parseToSectionType(sectionList) {
+        const tempSectionType = {};
+        for (let i = 0; i < sectionList.length; i++) {
+            const section = sectionList[i];
+            if (tempSectionType[section.type]) {
+                tempSectionType[section.type].push(section);
+            } else {
+                tempSectionType[section.type] = [section];
+            }
+        }
+        return tempSectionType;
+    }
+    /**
+     *
+     * @param {String} dept
+     * @param {Course[]} courseList
+     */
+    setDeptList(dept, courseList) {
+        const tempObj = {};
+        for (let i = 0; i < courseList.length; i++) {
+            tempObj[courseList[i].id] = courseList[i];
+        }
+        this.deptList[dept] = tempObj;
+    }
+}
+// for handling timetable display and caching
+class TimetableDisplay extends TimetableBase {
+    constructor() {
+        super();
+        this.displayingInfo = { dept: null, id: null };
+        /** {dept:{id:{dept, id, choseSection[Section], elementList[HTMLElement]}}} */
+        this.selected = {};
+        /** {dept:{id:{dept, id, choseSection[Section], elementList[HTMLElement]}}} */
+        this.disabled = {};
+        /** {dept:{id:{dept, id, choseSection[Section], elementList[HTMLElement]}} */
+        this.tempDisplay = {};
+        /** @type {HTMLElement[]}*/
+        this.gridDOWDom = [];
+        /** @type {HTMLElement} */
+        this.detailDiv;
+        /** @type {HTMLElement} */
+        this.suggestionDiv;
+    }
+    /**
+     *
+     * @param {String} dept
+     * @param {String} id
+     */
+    displayCourseDetail(dept, id) {
+        const sectionList = this.deptList[dept][id].section;
+        const parsedSectionList = this.parseToSectionType(sectionList);
+        // display title and credits
+        this.setDetailDiv(true, dept, id);
+        this.displayingInfo = { dept: dept, id: id };
+        // wrapper for sections
+        const detailBox = document.getElementById(
+            'planner-detail-box-container'
+        );
+        detailBox.innerHTML = '';
+        DetailDomBuilder.buildDetailBox(
+            this,
+            'HKUST',
+            dept,
+            id,
+            parsedSectionList
+        ).forEach((ele) => {
+            detailBox.appendChild(ele);
+        });
+    }
+    /**
+     *
+     * @param {Boolean} displayEnable
+     * @param {String} dept
+     * @param {String} id
+     */
+    setDetailDiv(displayEnable, dept, id) {
+        if (displayEnable) {
+            document.getElementById('planner-detail').style.display = 'block';
+        } else {
+            document.getElementById('planner-detail').style.display = 'none';
+            let list = document.getElementsByClassName(
+                'planner-detail-section-box-hover-selected'
+            );
+            for (let i = 0; i < list.length; ) {
+                list[i].classList.remove(
+                    'planner-detail-section-box-hover-selected'
+                );
+            }
+            list = document.getElementsByClassName(
+                'planner-detail-section-box-selected'
+            );
+            console.log(list);
+            for (let i = 0; i < list.length; ) {
+                list[i].classList.remove('planner-detail-section-box-selected');
+            }
+            return;
+        }
+        document.getElementById(
+            'planner-detail-id-name'
+        ).textContent = `${dept} ${id}`;
+        document.getElementById('planner-detail-name').textContent =
+            this.deptList[dept][id].name;
+    }
+    /**
+     *
+     * @param {String} dept
+     * @param {String} id
+     */
+    displaySection(dept, id, section) {
+        const displayDomList = new sectionDomBuilder(dept, id, section).build();
+        for (let i = 0; i < displayDomList.length; i++) {
+            const DOWDomIndex = this.getDowDomIndex(displayDomList[i].DOW);
+            const gridCellIndex = this.timeToGridCellIndex(
+                displayDomList[i].startTime
+            );
+            this.gridDOWDom[DOWDomIndex].childNodes[gridCellIndex].appendChild(
+                displayDomList[i].div
+            );
+        }
+        return displayDomList;
+    }
+    addToSelected() {
+        const selectedSectionList = document.getElementsByClassName(
+            'planner-detail-section-box-selected'
+        );
+        console.log(selectedSectionList);
+        const { dept, id } = this.displayingInfo;
+        const sectionDomList = [];
+        const sectionList = [];
+        for (let i = 0; i < selectedSectionList.length; i++) {
+            const section =
+                this.deptList[dept][id].section[
+                    selectedSectionList[i].attributes['sectionIndex'].value
+                ];
+            sectionList.push(section);
+            sectionDomList.push(...this.displaySection(dept, id, section));
+        }
+        if (!this.selected[dept]) {
+            this.selected[dept] = {};
+        }
+        if (!this.selected[dept][id]) {
+            this.selected[dept][id] = {
+                dept: dept,
+                id: id,
+                choseSection: [],
+                elementList: [],
+            };
+        }
+        this.selected[dept][id].choseSection.push(...sectionList);
+        this.selected[dept][id].elementList.push(...sectionDomList);
+    }
+    removeFromSelected(dom) {}
+    swapSelected(dom) {}
+    addToTempDisplay(dom) {}
+    removeFromTempDisplay(dom) {}
+}
+// for handling user input and timetable generation
+class Timetable extends TimetableDisplay {
+    constructor() {
+        super();
+        this.#setup();
+    }
+    /**
+     *
+     * @param {String} dept
+     * @param {String} id
+     */
+    selectCourseToDisplay(dept, id) {
+        this.displayCourseDetail(dept, id);
+    }
+    /** @param {HTMLelement} dom */
+    hoverInSelectDetail(dom) {
+        dom.classList.add('planner-detail-section-box-hover-selected');
+        this.addToTempDisplay(dom);
+    }
+    /** @param {HTMLelement} dom */
+    hoverOutSelectDetail(dom) {
+        dom.classList.remove('planner-detail-section-box-hover-selected');
+        this.removeFromTempDisplay(dom);
+    }
+    /** @param {HTMLElement} dom */
+    selectDetailSection(dom) {
+        const previousSelected = dom.parentElement.getElementsByClassName(
+            'planner-detail-section-box-selected'
+        )[0];
+        if (previousSelected) {
+            previousSelected.classList.remove(
+                'planner-detail-section-box-selected'
+            );
+        }
+        dom.classList.add('planner-detail-section-box-selected');
+        this.addToTempDisplay(dom);
+    }
+    /**
+     *
+     * @param {Section[]} sectionList
+     */
+    #isAllConflict(sectionList) {}
+    /**
+     *
+     * @param {Section} section
+     */
+    #isConflict(section) {}
+    #setup() {
+        const gridDom = document.getElementById('grid');
+        for (let i = 0; i < gridDom.childElementCount; i++) {
+            this.gridDOWDom.push(gridDom.children[i]);
+        }
+        this.detailDiv = document.getElementById('planner-detail');
+        this.suggestionDiv = document.getElementById('planner-suggestion');
+        this.detailDiv.style.display = 'none';
+        this.suggestionDiv.style.display = 'none';
+    }
+}
 class DetailDomBuilder {
     /**
      *
@@ -10,22 +308,24 @@ class DetailDomBuilder {
      */
     static buildDetailBox(timetable, school, dept, id, parsedSectionList) {
         // HKUST [L,T,LA,R] CUHK???
-        let HKUST_TYPE_LIST = ['L', 'T', 'LA', 'R'];
+        const HKUST_TYPE_LIST = ['L', 'T', 'LA', 'R'];
         const detailBoxChild = [];
+        let index = 0;
         for (let i = 0; i < HKUST_TYPE_LIST.length; i++) {
             if (parsedSectionList[HKUST_TYPE_LIST[i]]) {
                 // display section
                 const sectionList = parsedSectionList[HKUST_TYPE_LIST[i]];
                 const sectionTypeBox = document.createElement('div');
                 sectionTypeBox.classList.add('planner-detail-type-box');
-                for (let j = 0; j < sectionList.length; j++) {
+                for (let j = 0; j < sectionList.length; j++, index++) {
                     const section = sectionList[j];
                     const sectionBox = DetailDomBuilder.buildDetailSectionBox(
                         timetable,
                         dept,
                         id,
                         section,
-                        j
+                        j,
+                        index
                     );
                     sectionTypeBox.appendChild(sectionBox);
                 }
@@ -43,10 +343,11 @@ class DetailDomBuilder {
      * @param {Number} j
      * @returns {HTMLElement} sectionBox dom
      */
-    static buildDetailSectionBox(timetable, dept, id, section, j) {
+    static buildDetailSectionBox(timetable, dept, id, section, j, index) {
         const sectionBox = document.createElement('div');
         sectionBox.className = 'planner-detail-section-box';
-        if (j == 0) {
+        sectionBox.setAttribute('sectionIndex', index);
+        if (j === 0) {
             sectionBox.classList.add('planner-detail-section-box-selected');
         }
         //
@@ -99,266 +400,13 @@ class DetailDomBuilder {
                 'planner-detail-section-sub-box-time-multi'
             );
         }
-        sectionTime.textContent = `${dateTime.startTime} - ${dateTime.endTime}`;
+        sectionTime.textContent = `${dateTime.DOW} ${dateTime.startTime} - ${dateTime.endTime}`;
         //
         return sectionTime;
     }
 }
-class TimetableBase {
-    /**
-     *
-     * @param {String} DOW
-     * @returns index of DOW in DAY_LIST
-     */
-    getDowDomIndex(DOW) {
-        switch (DOW) {
-            case 'Mo':
-                return 0;
-            case 'Tu':
-                return 1;
-            case 'We':
-                return 2;
-            case 'Th':
-                return 3;
-            case 'Fr':
-                return 4;
-            case 'Sa':
-                return 5;
-            case 'Su':
-                return 6;
-            default:
-                return false;
-        }
-    }
-    /**
-     *
-     * @param {String} startTime
-     * @param {String} endTime
-     * @returns {number} height of Dom
-     */
-    timeToRatio(startTime, endTime) {
-        const startHr =
-            parseInt(startTime.substring(0, 2)) +
-            (startTime.endsWith('PM') ? 12 : 0);
-        const startMin = parseInt(startTime.substring(3, 5)) > 0 ? 30 : 0;
-        let endHr =
-            parseInt(endTime.substring(0, 2)) +
-            (endTime.endsWith('PM') ? 12 : 0);
-        let endMin = parseInt(endTime.substring(3, 5));
-        if (endMin > 30) {
-            endMin = 0;
-            endHr += 1;
-        } else if (endMin > 0) {
-            endMin = 30;
-        }
-        console.log(startHr, startMin, endHr, endMin);
-        return (endHr - startHr) * 100 + ((endMin - startMin) * 5) / 3;
-    }
-    /**
-     *
-     * @param {String} startTime
-     * @returns {number} index of the of the dom in the grid cell DOW
-     */
-    timeToGridCellIndex(startTime) {
-        const hr = parseInt(startTime.substring(0, 2));
-        const min = parseInt(startTime.substring(3, 5));
-        let index;
-        if (startTime.endsWith('AM')) {
-            // am
-            index = hr - 8;
-        } else {
-            // pm
-            index = hr + 12;
-        }
-        index += min >= 30;
-        return index;
-    }
-}
-class Timetable extends TimetableBase {
-    constructor() {
-        super();
-        this.credit = 0;
-        this.deptList = {};
-        this.inPlan = {}; // {dept:{id:{dept, id}}}
-        this.inGrid = {}; // {dept:{id:{dept, id, choseSection[], elementList[]}}}
-        this.favorite = {}; // {dept:{id:{dept,id}}}
-        this.tempDisplay = {}; // {dept:{id:{dept, id, choseSection[], elementList[]}}
-        this.gridDOWDom = [];
-        this.detailDiv;
-        this.suggestionDiv;
-        this.#setup();
-    }
-    /**
-     *
-     * @param {String} dept
-     * @param {Course[]} courseList
-     */
-    setDeptList(dept, courseList) {
-        const tempObj = {};
-        for (let i = 0; i < courseList.length; i++) {
-            tempObj[courseList[i].id] = courseList[i];
-        }
-        this.deptList[dept] = tempObj;
-    }
-    /**
-     *
-     * @param {String} dept
-     * @param {String} id
-     */
-    selectCourseToDisplay(dept, id) {
-        this.displayCourseDetail(dept, id);
-    }
-    /**
-     *
-     * @param {Boolean} displayEnable
-     * @param {String} dept
-     * @param {String} id
-     */
-    #setDetailDiv(displayEnable, dept, id) {
-        if (displayEnable) {
-            document.getElementById('planner-detail').style.display = 'block';
-        } else {
-            document.getElementById('planner-detail').style.display = 'none';
-            return;
-        }
-        document.getElementById(
-            'planner-detail-id-name'
-        ).textContent = `${dept} ${id}`;
-        document.getElementById('planner-detail-name').textContent =
-            this.deptList[dept][id].name;
-    }
-    /**
-     *
-     * @param {String} dept
-     * @param {String} id
-     */
-    displayCourseDetail(dept, id) {
-        const sectionList = this.deptList[dept][id].section;
-        const parsedSectionList = this.#parseToSectionType(sectionList);
-        // display title and credits
-        this.#setDetailDiv(true, dept, id);
-        // wrapper for sections
-        const detailBox = document.getElementById(
-            'planner-detail-box-container'
-        );
-        detailBox.innerHTML = '';
-        DetailDomBuilder.buildDetailBox(
-            this,
-            'HKUST',
-            dept,
-            id,
-            parsedSectionList
-        ).forEach((ele) => {
-            detailBox.appendChild(ele);
-        });
-        this.updateTempDisplay();
-    }
-    /**
-     *
-     * @param {HTMLelement} dom
-     */
-    hoverInSelectDetail(dom) {
-        dom.classList.add('planner-detail-section-box-hover-selected');
-        this.updateTempDisplay();
-    }
-    /**
-     *
-     * @param {HTMLelement} dom
-     */
-    hoverOutSelectDetail(dom) {
-        dom.classList.remove('planner-detail-section-box-hover-selected');
-        this.updateTempDisplay();
-    }
-    /**
-     *
-     * @param {HTMLElement} dom
-     */
-    selectDetailSection(dom) {
-        const previousSelected = dom.parentElement.getElementsByClassName(
-            'planner-detail-section-box-selected'
-        )[0];
-        if (previousSelected) {
-            previousSelected.classList.remove(
-                'planner-detail-section-box-selected'
-            );
-        }
-        dom.classList.add('planner-detail-section-box-selected');
-        this.updateTempDisplay();
-    }
-    updateTempDisplay() {
-        // TODO
-        // remove tempDisplay DOM
-        // restore inGrid
-        // get hover-selected section
-        // get all selected sections except type in hover-selected section
-        // add to tempDisplay
-        // remove from inGrid
-    }
-    /**
-     *
-     * @param {String} dept
-     * @param {String} id
-     * @param {Section[]} sectionList Selected Section list
-     */
-    addToInGrid(dept, id, sectionList) {}
-    /**
-     *
-     * @param {String} dept
-     * @param {String} id
-     */
-    #displaySectionTEST(dept, id) {
-        //! test only
-        const sectionList = this.deptList[dept][id].section;
-        const displayDomList = new sectionDomBuilder(
-            dept,
-            id,
-            sectionList[0]
-        ).build();
-        this.gridDOWDom[this.getDowDomIndex(displayDomList[0].DOW)].childNodes[
-            this.timeToGridCellIndex(displayDomList[0].startTime)
-        ].appendChild(displayDomList[0].div);
-    }
-    /**
-     *
-     * @param {Section[]} sectionList
-     * @returns
-     */
-    #parseToSectionType(sectionList) {
-        const tempSectionType = {};
-        for (let i = 0; i < sectionList.length; i++) {
-            const section = sectionList[i];
-            if (tempSectionType[section.type]) {
-                tempSectionType[section.type].push(section);
-            } else {
-                tempSectionType[section.type] = [section];
-            }
-        }
-        return tempSectionType;
-    }
-    /**
-     *
-     * @param {Section[]} sectionList
-     */
-    #isAllConflict(sectionList) {}
-    /**
-     *
-     * @param {Section} section
-     */
-    #isConflict(section) {}
-    #setup() {
-        const gridDom = document.getElementById('grid');
-        for (let i = 0; i < gridDom.childElementCount; i++) {
-            this.gridDOWDom.push(gridDom.children[i]);
-        }
-        this.detailDiv = document.getElementById('planner-detail');
-        this.suggestionDiv = document.getElementById('planner-suggestion');
-        this.detailDiv.style.display = 'none';
-        this.suggestionDiv.style.display = 'none';
-    }
-}
 
 class sectionDomBuilder extends TimetableBase {
-    static baseDom = null;
     /**
      *
      * @param {String} dept

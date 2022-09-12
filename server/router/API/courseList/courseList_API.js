@@ -33,10 +33,37 @@ async function courseListQuery(req, res) {
     }
     res.json({ error: false, list: [...courseListRes] });
 }
+async function courseQuery(req, res) {
+    const dept = req.query.dept;
+    const id = req.query.id;
+    const school = req.query.school;
+    if (dept === undefined || id === undefined || school === undefined) {
+        res.json({ error: true });
+        return;
+    }
+    const course = await CourseCollection.getInstance().findOneDoc(
+        {
+            dept: dept,
+            id: id,
+            school: school,
+        },
+        {
+            projection: {
+                _id: 0,
+            },
+        }
+    );
+    if (course === null) {
+        res.json({ error: true });
+        return;
+    }
+    res.json({ error: false, course: course });
+}
 function courseList_API_Router() {
     return new RouterBuilder()
-        .setPath('/courseList')
-        .addGetRequest('/', courseListQuery)
+        .setPath('/')
+        .addGetRequest('/course', courseQuery)
+        .addGetRequest('/courseList', courseListQuery)
         .build();
 }
 module.exports = { courseList_API_Router };
