@@ -1,7 +1,7 @@
 //! TODO builder for options and query
 const dataBaseName = 'expressServer';
-class MongoDataBase {
-    constructor(dbClient, collectionName) {
+class MongoDataBase_Base {
+    constructor(dbClient, dataBaseName, collectionName) {
         this.db = dbClient.db(dataBaseName);
         this.coll = this.db.collection(collectionName);
     }
@@ -47,24 +47,24 @@ class MongoDataBase {
         return await this.coll.distinct(field, query);
     }
 }
-class UserCollection extends MongoDataBase {
+class UserCollection extends MongoDataBase_Base {
     /** @type {UserCollection} */
     static #instance;
-    constructor(dbClient) {
+    constructor(dbClient, dataBaseName) {
         if (UserCollection.#instance) return UserCollection.#instance;
-        super(dbClient, 'user');
+        super(dbClient, dataBaseName, 'user');
         UserCollection.#instance = this;
     }
     static getInstance() {
         return UserCollection.#instance;
     }
 }
-class CourseCollection extends MongoDataBase {
+class CourseCollection extends MongoDataBase_Base {
     /** @type {CourseCollection} */
     static #instance;
-    constructor(dbClient) {
+    constructor(dbClient, dataBaseName) {
         if (CourseCollection.#instance) return CourseCollection.#instance;
-        super(dbClient, 'courseList');
+        super(dbClient, dataBaseName, 'courseList');
         CourseCollection.#instance = this;
     }
     static getInstance() {
@@ -74,9 +74,9 @@ class CourseCollection extends MongoDataBase {
 /** @type {UserCollection}*/
 let userCollection;
 let courseCollection;
-function initiateDatabaseInterface(db) {
-    userCollection = new UserCollection(db);
-    courseCollection = new CourseCollection(db);
+function initiateDatabaseInterface(db, dataBaseName) {
+    userCollection = new UserCollection(db, dataBaseName);
+    courseCollection = new CourseCollection(db, dataBaseName);
 }
 module.exports = {
     initiateDatabaseInterface,
