@@ -5,23 +5,20 @@ const cookieParser = require('cookie-parser');
 const MongoClient = require('mongodb').MongoClient;
 const app = express();
 //
-const { port, mongodbUrl } = require('./server/util/common');
+const { port, mongodbUrl, mongodbUrl_Cloud_SSL } = require('./server/util/common');
 //
 const { preMiddleware } = require('./server/middleware/preMiddleware');
 const { initiateDatabaseInterface } = require('./server/database/dataBase');
-const {
-    errorHandlerMiddleware,
-} = require('./server/middleware/errorHandlerMiddleware');
+const { errorHandlerMiddleware } = require('./server/middleware/errorHandlerMiddleware');
 const { setupRouter } = require('./server/router/rootRouter');
 const { serveStatic } = require('./server/middleware/static/serveStatic');
 const { CLL } = require('./server/util/consoleLogging');
-const {
-    fetchAndUpdateCourseList_HKUST,
-} = require('./server/tasks/courseList/fetchCourseList_HKUST');
+const { fetchAndUpdateCourseList_HKUST } = require('./server/tasks/courseList/fetchCourseList_HKUST');
 // ---------- end of import ---------------
 const threadName = 'MAIN';
 //
-MongoClient.connect(mongodbUrl, function (err, db) {
+const targetURL = process.env.CONNECTION_TARGET === 'CLOUD' ? mongodbUrl_Cloud_SSL : mongodbUrl;
+MongoClient.connect(targetURL, function (err, db) {
     if (err) throw err;
     CLL.log(threadName, 'Mongodb', 'Connected to Mongodb');
     if (process.env.NODE_ENV === 'development') {
