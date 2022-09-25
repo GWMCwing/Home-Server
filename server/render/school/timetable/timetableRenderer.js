@@ -1,12 +1,20 @@
+const { availableSchool } = require('../../../util/common');
 const path = require('path');
 const { viewPath } = require('../../../util/common');
 const { generateNavBarItemList } = require('../../navBar/navBarGenerator');
 const { CourseCollection } = require('../../../database/dataBase');
 async function timetableRendererCallback(req, res) {
+    const schoolName = req.params.schoolName;
+    if (!availableSchool.includes(schoolName)) {
+        res.redirect('../timetable');
+        return;
+    }
     const deptList = await CourseCollection.getInstance().distinct('dept', {
         semester: '2210',
+        school: schoolName,
     });
-    let pugObject = {
+    const pugObject = {
+        schoolName: schoolName,
         deptList: deptList,
         navBarList: generateNavBarItemList(req),
     };

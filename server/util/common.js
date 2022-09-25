@@ -19,6 +19,9 @@ const htmlStructurePath = path.join(
     'html',
     'structure'
 );
+//
+const availableSchool = ['HKUST'];
+//
 const errorPath = path.join(rootPath, 'client', 'html', 'error');
 
 module.exports = {
@@ -29,6 +32,7 @@ module.exports = {
     cssPath,
     publicJSPath,
     htmlStructurePath,
+    availableSchool,
     errorPath,
     hash,
 };
