@@ -9,9 +9,16 @@
     "mongodb": "^4.8.0",
     "morgan": "^1.10.0",
     "pbkdf2-password": "^1.2.1",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "typescript": "^4.9.3"
   },
   "scripts": {
-    "testServer": "start cmd.exe @cmd /k \"title Test Server && cd E:/Coding/AddDrop-WebServer && nodemon app.js\""
+    "testServer": "start cmd.exe @cmd /k \"title Test Server && cd E:/Coding/AddDrop-WebServer && nodemon bin/app.js\"",
+    "build": "npx tsc",
+    "start": "npx tsc && node ./bin/app.js",
+    "startmon": "npx tsc && nodemon ./bin/app.js"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.3"
   }
 }

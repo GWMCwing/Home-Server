@@ -4,6 +4,7 @@ node_modules
 server/user/*.json
 /test/*
 *.code-workspace
+/bin/**
 #
 #
 # Logs

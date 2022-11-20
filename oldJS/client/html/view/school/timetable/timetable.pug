@@ -9,6 +9,10 @@ html(lang="en")
         title Timetable Planner
     link(rel='stylesheet', href='/resource/css/structure/general.css')
     link(rel='stylesheet', href='/resource/css/school/timetable/timetable.css')
+    script(src="/resource/javascript/school/timetable/Course.js") 
+    script(src="/resource/javascript/school/timetable/TimetableBase.js") 
+    script(src="/resource/javascript/school/timetable/DomBuilder.js") 
+    script(src="/resource/javascript/school/timetable/TimetableDisplay.js") 
     script(src="/resource/javascript/school/timetable/Timetable.js") 
     script(src="/resource/javascript/school/timetable/search.js") 
     body 
@@ -46,7 +50,7 @@ html(lang="en")
                             span#planner-detail-tag.tag tag
                         #planner-detail-box-container.detail-box-container
                         ul#planner-detail-box-menu 
-                            li.button.add('onclick'='timetable.addToSelected()') Add 
+                            li.button.add('onclick'='timetable.addSelectedSectionToDisplay()') Add 
                             li.button.remove Remove
                             li.button.swap Swap
                             li.button.cancel('onclick'='timetable.setDetailDiv(false)') Cancel

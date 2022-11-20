@@ -1,6 +1,4 @@
 {
-    "cSpell.words": [
-        "HLTH",
-        "newsect"
-    ]
+    "cSpell.words": ["HLTH", "newsect"],
+    "cSpell.ignoreWords": ["startmon"]
 }
