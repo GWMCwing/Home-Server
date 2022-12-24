@@ -14,9 +14,13 @@
         "noImplicitAny": true,
         "noImplicitOverride": true,
         "noImplicitReturns": true,
-        "removeComments": true
+        "removeComments": true,
+        "allowJs": true,
+        "checkJs": true,
+        // dev
+        // "noEmitOnError": true
+        "lib": ["es2021", "dom"]
     },
-    "lib": ["es2021"],
     // "include": ["src/**/*"],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", "bin", "oldJS"]
 }

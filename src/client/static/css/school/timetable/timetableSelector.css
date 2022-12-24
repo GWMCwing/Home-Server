@@ -1,0 +1,31 @@
+body{
+    height: 95vh;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+.selectorWrapper{
+
+    height: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center ;
+    flex-direction: column;
+    font-size: large;
+}
+.schoolListWrapper{
+    max-height: 80%;
+    overflow-y: auto;
+}
+ul.schoolList{
+    list-style-type: none;
+    padding: 0;
+}
+ul.schoolList li{
+    padding: 0.25em;
+    cursor: pointer;
+}

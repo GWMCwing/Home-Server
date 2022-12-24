@@ -13,7 +13,7 @@ async function getCourseList(dept) {
             '/API/courseList'
     );
     url.searchParams.set('dept', dept);
-    url.searchParams.set('semester', '2210');
+    url.searchParams.set('semester', '2220');
     url.searchParams.set('school', 'HKUST');
     let data;
     try {
