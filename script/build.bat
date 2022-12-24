@@ -1,3 +1,3 @@
 @ECHO off
-ECHO Building JavaScript
-npx tsc && ECHO Build Complete
+ECHO Compiling Typescript
+npx tsc && ECHO Compile Complete
