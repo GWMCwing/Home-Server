@@ -15,9 +15,9 @@
   },
   "scripts": {
     "testServer": "start cmd.exe @cmd /k \"title Test Server && cd E:/Coding/AddDrop-WebServer && nodemon bin/app.js\"",
-    "build": "npx tsc",
-    "start": "npx tsc && node ./bin/app.js",
-    "startmon": "npx tsc && nodemon ./bin/app.js"
+    "build": ".\\script\\copyFiles.bat && .\\script\\build.bat",
+    "start": "npm run build && ECHO Starting... && node ./bin/app.js",
+    "startmon": "npm run build && ECHO Starting monitor... && nodemon ./bin/app.js"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
