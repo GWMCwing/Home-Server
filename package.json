@@ -10,14 +10,16 @@
     "mongodb": "^4.8.0",
     "morgan": "^1.10.0",
     "pbkdf2-password": "^1.2.1",
-    "pug": "^3.0.2",
-    "typescript": "^4.9.3"
+    "pug": "^3.0.2"
   },
   "scripts": {
     "testServer": "start cmd.exe @cmd /k \"title Test Server && cd E:/Coding/AddDrop-WebServer && nodemon bin/app.js\"",
-    "build": ".\\script\\copyFiles.bat && .\\script\\build.bat",
-    "start": "npm run build && ECHO Starting... && node ./bin/app.js",
-    "startmon": "npm run build && ECHO Starting monitor... && nodemon ./bin/app.js"
+    "copyFiles": ".\\script\\copyFiles.bat",
+    "copyFromBin": ".\\script\\copyFilesFromBin.bat",
+    "build": "npm run copyFiles && .\\script\\build.bat",
+    "start": "npm run build && ECHO Starting... && npm run startOnly",
+    "startOnly": "start cmd.exe @cmd /k \"node ./bin/app.js\"",
+    "startmon": "npm run build && ECHO Starting monitor... && start cmd.exe @cmd /k \"nodemon ./bin/app.js\""
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
@@ -25,6 +27,8 @@
     "@types/express": "^4.17.14",
     "@types/node": "^18.11.17",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
-    "@typescript-eslint/parser": "^5.43.0"
+    "@typescript-eslint/parser": "^5.43.0",
+    "ts-loader": "^9.4.2",
+    "typescript": "^4.9.4"
   }
 }
