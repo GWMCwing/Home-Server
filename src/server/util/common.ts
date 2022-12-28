@@ -33,9 +33,9 @@ export const htmlStructurePath: string = path.join(
     'structure'
 );
 //
-export enum AvailableSchool {
-    HKUST = 'HKUST',
-}
+export const AvailableSchool = {
+    HKUST: 'HKUST',
+} as const;
 export const SchoolList: string[] = Object.keys(AvailableSchool);
 //
 export const errorPath: string = path.join(rootPath, 'client', 'html', 'error');

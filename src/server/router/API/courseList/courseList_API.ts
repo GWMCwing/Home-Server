@@ -34,9 +34,15 @@ async function courseListQuery(req: Request, res: Response) {
 }
 async function courseQuery(req: Request, res: Response) {
     const dept = req.query.dept;
-    const id = req.query.id;
+    const id = req.query.id; // the code id of the course COMP2012: id = 2012
     const school = req.query.school;
-    if (dept === undefined || id === undefined || school === undefined) {
+    const semester = req.query.semester;
+    if (
+        dept === undefined ||
+        id === undefined ||
+        school === undefined ||
+        semester === undefined
+    ) {
         res.status(400).json({ error: true });
         return;
     }
@@ -45,6 +51,7 @@ async function courseQuery(req: Request, res: Response) {
             dept: dept,
             id: id,
             school: school,
+            semester: semester,
         },
         {
             projection: {
@@ -60,8 +67,8 @@ async function courseQuery(req: Request, res: Response) {
 }
 export function courseList_API_Router() {
     return new RouterBuilder()
-        .setPath('/')
-        .addGetRequest('/course', courseQuery)
+        .setPath('/course')
+        .addGetRequest('/', courseQuery)
         .addGetRequest('/courseList', courseListQuery)
         .build();
 }

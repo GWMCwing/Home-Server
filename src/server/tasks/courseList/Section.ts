@@ -6,8 +6,8 @@ import {
     isDayOfWeek,
     Regex_dayOfWeek,
     SectionType_HKUST,
-} from '../../res/type/SectionType';
-import { SectionBase } from './SectionType';
+    SectionBase,
+} from '../../../res/type/SectionType';
 
 /**
  *

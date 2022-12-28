@@ -1,10 +1,9 @@
 //TODO Rebuild the type def and class
 import { generate_HKUST_Section, HKUST_Section } from './Section';
 import { CheerioAPI, load } from 'cheerio';
-import { CourseBase } from '../../res/type/CourseType';
+import { CourseBase } from '../../../res/type/CourseType';
 import { AvailableSchool } from '../../util/common';
 import { CLL } from '../../util/consoleLogging';
-
 export class HKUST_Course extends CourseBase {
     constructor(
         dept: string,
