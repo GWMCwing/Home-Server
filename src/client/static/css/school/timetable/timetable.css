@@ -1,10 +1,18 @@
-:root{
-    --timetable-flex: 50;
-}
 body{
     background-color: white;
     color: black;
     height: 100vh;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+ul {
+    display: block;
+    list-style-type: none;
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 0px;
 }
 .no-select{  
     -webkit-touch-callout: none; /* iOS Safari */
@@ -15,243 +23,147 @@ body{
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
-.timetable-container{
-    height:100%;
-    width:95%;
-}
-.timetable-panel{
+#timetable-container{
+    width:90%;
+    height: 90vh;
+    margin-top: 1em;
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
-    height: 85vh;
-    min-height: 0;
-    padding-left: 25px;
-    padding-right: 25px;
-    align-content: stretch;
+    justify-content: space-around;
+    border: 0.2rem solid rgb(214, 214, 214);
+    border-radius: 2%;
 }
-.timetable-panel > .left-panel{
-    margin-top:16px;
-    width:22.5%;
+#timetable-container > *{
+    padding-top: 1rem;
 }
-#course-list-container{
-    max-height: 90%;
-    width:100%;
-    overflow-y: auto;
-    overflow-x: hidden;
+
+#left-panel{
+    flex: 2;
+    width: 30%;
 }
-#course-list-container > ul{
-    padding: 0;
+#right-panel{
+    flex: 8;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+#left-panel > *{
+    padding-left: 0.5em;
+}
+#left-panel #search-bar input{
+    padding-top: 0.75rem;
+    padding-bottom: 0.5rem;
+    border: 0em;
+}
+#left-panel #search-bar input:focus{
+    /* remove outline focus */
+    outline-width: 0; 
+}
+#left-panel #course-list-container{
+    text-align: left;
+}
+#left-panel #course-list-container li{
+    font-size: 1.2em;
+    padding: 0.25em 0em;
+}
+/* #right-panel */
+#right-panel #planner-menu{
+    flex: 0 0 auto;
+}
+#right-panel #planner-sub-menu{
+    flex: 0 0 auto;
+}
+#right-panel .planner-timetable{
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+/* #right-panel #planner-menu */
+#right-panel #planner-menu > *{
+    padding: 0.2rem;
+}
+#right-panel #planner-menu #planner-menu-left{
     display:flex;
-    flex-wrap: wrap;
     justify-content: space-around;
 }
-#course-list-container > * > li{
-    width:48%;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    text-align: center;
-    border: 1px solid #aaa;
-    font-weight: bold;
+#right-panel #planner-menu #planner-menu-right{
+    display:flex;
+    justify-content: space-around;
 }
-#course-list-container > * > li:hover{
-    background-color: #eee;
+#right-panel #planner-menu #planner-menu-right li{
+    margin-right: 2.5rem;
 }
-#course-list-container > * > li.full-width{
-    width:100%;
+/* #right-panel #planner-sub-menu */
+#right-panel #planner-sub-menu #planner-course-detail{
+    display: none;
 }
-#course-selector-list > li:not(:first-child) > p:nth-child(1){
-    /* title */
-    margin: 0;
-    margin-bottom: 8px;
-    margin-left: 4px;
-    text-align: left;
-    color: blue;
-}
-#course-selector-list > li:not(:first-child) > p:nth-child(2){
-    /* name */
-    margin: 0;
-    margin-left: 4px;
-    color: gray;
-    text-align: left;
-}
-/* 
- */
-/*  */
-.timetable-panel > #planner{
-    width:80%;
-}
-li{
-    list-style: none;
-}
-#planner > ul{
-    display: flex;
-    justify-content: space-between;
-}
-#planner > ul > li{
-    padding: 10px;
-}
-#planner > .planner-menu{
-    margin: 0px;
-}
-/* 
- */
-.planner-timetable{
-    min-height: 0;
-}
-.planner-timetable > .day-of-week{
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    margin-top: 0px;
-    margin-bottom: 0px;
-}
-.planner-timetable > .day-of-week > li.empty{
-    flex-grow: 1;
-    flex-basis: 1;
-}
-.planner-timetable > .day-of-week > li{
-    flex-grow: var(--timetable-flex);
-    width:100%;
-}
-.planner-timetable > .day-of-week > li > p{
-    margin-top:0;
-    margin-bottom:0;
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-
-.planner-timetable > .day-of-week > li > span{
-    font-size: 0.85rem;
-    color: rgb(102, 102, 102)
-}
-.planner-timetable{
-    padding-bottom: 50px;
-    height:70%
+#right-panel #planner-sub-menu #planner-course-suggestion{
 
 }
-.planner-timetable>.timetable{
-    display:flex;
-    justify-content: center;
-    height: 100%;
-}
-.planner-timetable>.timetable > .time{
-    display: flex;
-    text-align: center;
-    flex-direction: column;
-    align-content: stretch;
-    padding-left: 0;
-    flex-grow: 1;
-    width:12.5%;
-    margin-bottom:0;
-    margin-top:0;
-}
-.planner-timetable>.timetable > .time > li{
-    height: 100%;
-    margin-top:-8px;
-    font-weight: 600;
-}
-.planner-timetable>.timetable > .grid{
-    display:flex;
-    flex-grow: var(--timetable-flex);
-    width:87.5%;
-    border-top: 1px solid #ddd;
-}
-.planner-timetable>.timetable > .grid > div{
-    display:flex;
-    flex-direction: column;
-    width:100%;
-    border-right: 1px solid #ddd;
-}
-.planner-timetable>.timetable > .grid > div.weekend{
-    background-color: rgb(248, 248, 248);
-}
-.planner-timetable>.timetable > .grid > div:first-child{
-    border-left: 1px solid #ddd;
-}
-/*  */
-.planner-timetable>.timetable > .grid > div > div{
-    display:flex;
-    position: relative;
-    height: 100%;
-    border-bottom: 1px solid #eee;
-}
+/* #right-panel #planner-sub-menu #planner-course-detail */
+#right-panel #planner-sub-menu #planner-course-detail .title-container{
 
-.planner-timetable>.timetable > .grid > div > div:nth-child(2n){
-    border-bottom-color:#ddd;
 }
-/*! decided by js, inline css */
-.planner-timetable>.timetable > .grid > div > div > div{
-    position:absolute;
+#right-panel #planner-sub-menu #planner-course-detail .detail-box-container{
+
+}
+#planner-course-detail-box-menu{
+    display:flex;
+}
+#planner-course-detail-box-menu li{
+    margin-right: 3rem;
+}
+#planner-course-detail-box-menu li:last-of-type{
+    margin-left: auto;
+}
+/* #right-panel .planner-timetable */
+#right-panel .planner-timetable .day-of-week {
+    display: flex;
+    flex: 0 0 auto;
+}
+#right-panel .planner-timetable .timetable {
+    display:flex;
+    flex: 1 1 auto;
+}
+/* #right-panel .planner-timetable .day-of-week */
+#right-panel .planner-timetable .day-of-week li{
     width: 100%;
-    z-index: 2;
 }
-/* 
- */
-.section-outer{
-    overflow: hidden;
-    border: 1px solid red;
-    transition: max-height 1s ease;
-}
-.section-outer.hovering{
-    max-height: 100vh !important;
-    max-width:  100vw !important;
-}
-#planner-detail{
-    height: 30%;
-    overflow: hidden;
-    margin: 8px;
-    margin-bottom: 0px;
-}
-#planner-detail > .title-container{
-    flex-basis: 100%;
-}
-#planner-detail-box-container{
-    display:flex;
-    flex-basis: 100%;
-    align-content: stretch;
-    width:100%;
-    height:65%;
-    overflow-x: auto;
-}
-.planner-detail-type-box{
-    overflow-y: auto;
-    margin: 16px;
-    margin-bottom: 4px;
+#right-panel .planner-timetable .day-of-week li > *{
+    text-align: center;
     width: 100%;
-    flex: 0 1 40%;
 }
-.planner-detail-section-box {
-    display:flex;
-    font-size: small;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    /* margin-top: 8px;
-    margin-bottom: 8px;
-    margin-right: 4px; */
-    margin:8px;
+#right-panel .planner-timetable .day-of-week li p{
+    margin: 0.2rem 0rem;
 }
-.planner-detail-section-sub-box-title{
-    margin-left:8px;
+#right-panel .planner-timetable .day-of-week li div span{
+    color: lightslategray;
 }
-.planner-detail-section-sub-box-time{
+/* #right-panel .planner-timetable .timetable */
+#right-panel .planner-timetable .timetable .time{
+    width: fit-content;
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+/* #right-panel .planner-timetable .timetable  */
+#timetable-grid{
+    width: auto;
+    flex: 7;
+    display: flex;
+}
+/* #right-panel .planner-timetable .timetable .time*/
+#right-panel .planner-timetable .timetable .time li{
+    flex: 1;
     text-align: right;
+    padding-right: 0.5rem;
 }
-.planner-detail-section-sub-box-time-multi{
-    flex-basis: 100%;
-}
-#planner-detail-box-menu {
-    margin: 0;
-}
-#planner-detail-box-menu > li {
-    float: left;
-    padding-right: 32px;
-}
-#planner-detail-box-menu > li.cancel{
-    float: right;
-    padding-right: 0px;
-}
-.planner-detail-section-box-selected{
-    background-color: rgba(173, 173, 173, 0.596);
-}
-.planner-detail-section-box-hover-selected{
-    background-color: rgba(104, 104, 255, 0.596);
+/* #right-panel .planner-timetable .timetable  #timetable-grid*/
+#timetable-grid div{
+    flex:1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }

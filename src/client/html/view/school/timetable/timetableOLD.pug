@@ -1,0 +1,84 @@
+-var timetableTime = ['8 am','9 am','10 am','11 am','12 pm','1 pm','2 pm','3 pm','4 pm','5 pm','6 pm','7 pm','8 pm','9 pm','10 pm']
+-var semesterName = '2022-2023 Fall'
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Timetable Planner
+    link(rel='stylesheet', href='/resource/css/structure/general.css')
+    link(rel='stylesheet', href='/resource/css/school/timetable/timetable.css')
+    script(src="/resource/javascript/school/timetable/Course.js") 
+    script(src="/resource/javascript/school/timetable/TimetableBase.js") 
+    script(src="/resource/javascript/school/timetable/DomBuilder.js") 
+    script(src="/resource/javascript/school/timetable/TimetableDisplay.js") 
+    script(src="/resource/javascript/school/timetable/Timetable.js") 
+    script(src="/resource/javascript/school/timetable/search.js") 
+    body 
+        include ../../../structure/navBar.pug
+        //- 
+        //- 
+        .timetable-container
+            .timetable-panel 
+                .left-panel
+                    #search-bar  
+                        input(class="search-course", type="text", placeholder="Search course")
+                    #course-list-container
+                        ul#main-selector-list
+                            li.collection.heading.full-width.no-select Collection
+                            li.favorite.icon-favorites.full-width.no-select Favorites
+                            li.plan.icon-plan.full-width.no-select Plan
+                            li.subject.heading.full-width.no-select Subject
+                            for dept in deptList
+                                li.dept.no-select(onclick='selectDept("'+dept+'")')= dept
+                        ul#course-selector-list
+                            li.back-button.no-select.full-width(onclick='courseListBack()') Back
+                #planner
+                    ul.planner-menu 
+                        li.semester.no-select= semesterName
+                        li.table-dropdown.no-select TableName
+                    ul.planner-sub-menu
+                        li.button.add-constraint.no-select Add Time Constraint
+                        li.button.suggest-timetable.no-select Suggest Timetables 
+                        li.button.other-section.no-select Other Sections 
+                        li.credits.no-select 0 credits
+                    #planner-detail.planner-detail.no-select
+                        .title-container 
+                            span#planner-detail-id-name.id-name title
+                            span#planner-detail-name.name long name 
+                            span#planner-detail-tag.tag tag
+                        #planner-detail-box-container.detail-box-container
+                        ul#planner-detail-box-menu 
+                            li.button.add('onclick'='timetable.addSelectedSectionToDisplay()') Add 
+                            li.button.remove Remove
+                            li.button.swap Swap
+                            li.button.cancel('onclick'='timetable.setDetailDiv(false)') Cancel
+                    #planner-suggestion.planner-suggestion
+                    .planner-timetable 
+                        ul.day-of-week
+                            li.empty
+                                span
+                            for day_of_week in ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+                                li.no-select
+                                    p=day_of_week
+                                    span
+                                        span.day-of-week-hour 0.0 hours
+                        .timetable 
+                            ul.time.no-select
+                                for time in timetableTime
+                                    li=time
+                                    li.empty
+                            #grid.grid 
+                                - var i = 0;
+                                while i < 7
+                                    div(class=i > 4 ? 'weekend' : '')
+                                        - var j = 0;
+                                        while j < 15 * 2
+                                            div
+                                            - j++
+                                    - i++
+
+
+        //- 
+        include ../../../structure/footer.pug
