@@ -1,3 +1,9 @@
+/* greater than 650px width && any height*/
+:root{
+    --outer-border-color: rgb(214, 214, 214);
+    --outer-border-radius: 0.2rem;
+    --left-panel-padding-left: 0.3rem;
+}
 body{
     background-color: white;
     color: black;
@@ -23,34 +29,45 @@ ul {
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
+/*  */
 #timetable-container{
     width:90%;
     height: 90vh;
     margin-top: 1em;
     margin-left: auto;
     margin-right: auto;
-    display: flex;
-    justify-content: space-around;
-    border: 0.2rem solid rgb(214, 214, 214);
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+    /* justify-content: space-around; */
+    border: var(--outer-border-radius) solid var(--outer-border-color);
     border-radius: 2%;
+    box-shadow: 0rem 0rem 1rem rgba(211, 211, 211, 0.219);
 }
 #timetable-container > *{
     padding-top: 1rem;
 }
 
 #left-panel{
-    flex: 2;
-    width: 30%;
+    /* flex: 0 0 auto; */
+    border-right: 0.15rem solid var(--outer-border-color);
 }
 #right-panel{
-    flex: 8;
-    width: 70%;
+    /* flex: 1 1 auto; */
     display: flex;
     flex-direction: column;
 }
-#left-panel > *{
-    padding-left: 0.5em;
+/* #left-panel */
+#left-panel > * > * > *{
+    padding: 0.5rem var(--left-panel-padding-left);
 }
+#left-panel #course-list-container{
+    text-align: left;
+}
+/* border for list of element*/
+.left-panel-list-element{
+    border-bottom: 0.125rem solid var(--outer-border-color);
+}
+/* #left-panel #search-bar */
 #left-panel #search-bar input{
     padding-top: 0.75rem;
     padding-bottom: 0.5rem;
@@ -60,12 +77,28 @@ ul {
     /* remove outline focus */
     outline-width: 0; 
 }
-#left-panel #course-list-container{
-    text-align: left;
+/* #left-panel #course-list-container */
+#course-list-container-back-button{
+    /* display: none; */
 }
-#left-panel #course-list-container li{
-    font-size: 1.2em;
-    padding: 0.25em 0em;
+#left-panel #course-list-container ul li{
+    font-size: 1.1em;
+}
+#dept-selector-list{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow-y: auto;
+}
+#course-selector-list{
+    /* display: none; */
+}
+/* #left-panel #course-list-container #dept-selector-list*/
+#dept-selector-list > li{
+    text-overflow: clip;
+    padding-left: var(--left-panel-padding-left);
+}
+#dept-selector-list > li:nth-child(odd){
+    border-right: 0.05rem solid var(--outer-border-color);
 }
 /* #right-panel */
 #right-panel #planner-menu{
@@ -96,7 +129,7 @@ ul {
 }
 /* #right-panel #planner-sub-menu */
 #right-panel #planner-sub-menu #planner-course-detail{
-    display: none;
+    /* display: none; */
 }
 #right-panel #planner-sub-menu #planner-course-suggestion{
 
@@ -128,7 +161,20 @@ ul {
 }
 /* #right-panel .planner-timetable .day-of-week */
 #right-panel .planner-timetable .day-of-week li{
-    width: 100%;
+    flex: 10;
+    /* !ratio match with 
+        #right-panel .planner-timetable .timetable .time 
+        /
+        #timetable-grid
+    */
+}
+#right-panel .planner-timetable .day-of-week li:first-child{
+    flex: 7;
+    /* !ratio match with 
+        #right-panel .planner-timetable .timetable .time 
+        /
+        #timetable-grid
+    */
 }
 #right-panel .planner-timetable .day-of-week li > *{
     text-align: center;
@@ -142,17 +188,28 @@ ul {
 }
 /* #right-panel .planner-timetable .timetable */
 #right-panel .planner-timetable .timetable .time{
-    width: fit-content;
     flex: 1;
     height: 100%;
     display: flex;
     flex-direction: column;
+    /* !ratio match with 
+        #right-panel .planner-timetable .day-of-week li:first-child
+        /
+        #right-panel .planner-timetable .day-of-week li
+    */
 }
 /* #right-panel .planner-timetable .timetable  */
 #timetable-grid{
     width: auto;
-    flex: 7;
+    flex: 10;
     display: flex;
+    /* !ratio match with 
+        #right-panel .planner-timetable .day-of-week li:first-child
+        /
+        #right-panel .planner-timetable .day-of-week li
+    */
+    padding-bottom: 0.2rem;
+    padding-right: 0.2rem;
 }
 /* #right-panel .planner-timetable .timetable .time*/
 #right-panel .planner-timetable .timetable .time li{
@@ -166,4 +223,25 @@ ul {
     height: 100%;
     display: flex;
     flex-direction: column;
+}
+#timetable-grid > *:not(:last-child){
+    border-right: 1px solid rgb(220, 220, 220);
+}
+#timetable-grid > div > div {
+    /* set child cell to be relative to this cell */
+    position: relative;
+}
+#timetable-grid > div > div:nth-child(odd){
+    border-top: 1px solid rgb(220, 220, 220);
+}
+#timetable-grid > div > div:nth-child(even){
+    border-top: 1px solid rgba(238, 238, 238, 0.5);
+}
+#timetable-grid .weekend{
+    background-color: rgba(240, 245, 245, 0.25);
+}
+/* cell within each cell*/
+#timetable-grid > div > div >*{
+    /* set the cell to be relative to the parent div */
+    position: absolute;
 }

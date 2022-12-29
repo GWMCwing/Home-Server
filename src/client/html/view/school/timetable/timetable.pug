@@ -9,24 +9,29 @@ html(lang="en")
         title Timetable Planner
     link(rel='stylesheet', href='/resource/css/structure/general.css')
     link(rel='stylesheet', href='/resource/css/school/timetable/timetable.css')
+    script(type="module" src="/resource/javascript/school/timetablePlanner/main.js") 
     body 
+        div#info(semester=semester, school=school)
         include ../../../structure/navBar.pug
         //- 
         //- 
         #timetable-container.no-select
             #left-panel
-                #search-bar
+                #search-bar.left-panel-list-element
                     input(class="search-course", type="text", placeholder="Search course")
                 #course-list-container
+                    div#course-list-container-back-button.full-width.left-panel-list-element Back
                     ul#main-selector-list
-                        li#collection-selector.heading.full-width Collection
-                        li#favorite-selector.icon-favorites.full-width Favorites
-                        li#plan-selector.icon-plan.full-width Plan
-                        li#subject-selector.heading.full-width Subject
+                        li#collection-selector.heading.full-width.left-panel-list-element Collection
+                        li#favorite-selector.icon-favorites.full-width.left-panel-list-element Favorites
+                        li#plan-selector.icon-plan.full-width.left-panel-list-element Plan
+                        li#subject-selector.heading.full-width.left-panel-list-element Subject
+                    ul#dept-selector-list
                         for dept in deptList
-                            li.dept(onclick='selectDept("'+dept+'")')= dept
+                            li.dept.left-panel-list-element= dept
+                        if deptList.length%2
+                            li.dept.left-panel-list-element.empty-element
                     ul#course-selector-list
-                        li.back-button.full-width(onclick='courseListBack()') Back
             #right-panel
                 #planner-menu
                     ul#planner-menu-left 
@@ -39,16 +44,16 @@ html(lang="en")
                         li.credits 0 credits
                 #planner-sub-menu
                     #planner-course-detail
-                        .title-container 
+                        #planner-course-detail-title-container 
                             span#planner-course-detail-id-name.id-name title
                             span#planner-course-detail-name.name ------long name-----
                             span#planner-course-detail-tag.tag tag
                         #planner-course-detail-box-container.detail-box-container
                         ul#planner-course-detail-box-menu 
-                            li.button.add('onclick'='timetable.addSelectedSectionToDisplay()') Add 
-                            li.button.remove Remove
-                            li.button.swap Swap
-                            li.button.cancel('onclick'='timetable.setDetailDiv(false)') Cancel
+                            li.button#planner-course-detail-box-menu-add Add 
+                            li.button#planner-course-detail-box-menu-remove Remove
+                            li.button#planner-course-detail-box-menu-swap Swap
+                            li.button#planner-course-detail-box-menu-cancel Cancel
                     #planner-course-suggestion
                     //- TODO selector
                 .planner-timetable 

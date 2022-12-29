@@ -6,11 +6,11 @@ html(lang="en")
         title Timetable Planner Selector
     link(rel='stylesheet', href='/resource/css/structure/general.css')
     link(rel='stylesheet', href='/resource/css/school/timetable/timetableSelector.css')
-    script(src="/resource/javascript/school/timetable/timetableSelector.js")
+    script(type="module" src="/resource/javascript/school/timetable/timetableSelector/timetableSelector.js")
     body
         .selectorWrapper 
             p Select School from below or create a general planner
             .schoolListWrapper 
-                ul.schoolList 
+                ul#schoolList 
                     for _school in availableSchool 
-                        li(onclick="selectSchool('"+_school+"')")=_school
+                        li _school

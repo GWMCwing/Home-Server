@@ -21,11 +21,11 @@ body{
     max-height: 80%;
     overflow-y: auto;
 }
-ul.schoolList{
+ul#schoolList{
     list-style-type: none;
     padding: 0;
 }
-ul.schoolList li{
+ul#schoolList li{
     padding: 0.25em;
     cursor: pointer;
 }

@@ -1,6 +1,7 @@
 #navBar
     link(rel='stylesheet', href='/resource/css/structure/navBar.css')
-    script(src="/resource/javascript/navBar.js") 
+    script(src="/resource/javascript/common/navBar.js") 
     each navBarItem in navBarList
         a(class=navBarItem.className, href=navBarItem.link) 
             = navBarItem.name
+    
