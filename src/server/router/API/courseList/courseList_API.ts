@@ -68,7 +68,7 @@ async function courseQuery(req: Request, res: Response) {
 export function courseList_API_Router() {
     return new RouterBuilder()
         .setPath('/course')
-        .addGetRequest('/', courseQuery)
+        .addGetRequest('/course', courseQuery)
         .addGetRequest('/courseList', courseListQuery)
         .build();
 }

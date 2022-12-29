@@ -6,7 +6,7 @@ export async function fetchCourseList(
     school: SchoolName
 ): Promise<CourseBase[]> {
     const res = await fetch(
-        `/api/courseList?dept=${dept}&semester=${semester}&school=${school}`
+        `/API/course/courseList?dept=${dept}&semester=${semester}&school=${school}`
     );
     if (res.status !== 200) {
         throw new Error('Failed to fetch course list');
@@ -25,7 +25,7 @@ export async function fetchCourseDetail(
     semester: string
 ): Promise<CourseBase> {
     const res = await fetch(
-        `/api/course?dept=${dept}&id=${id}&school=${school}&semester=${semester}`
+        `/API/course/course?dept=${dept}&id=${id}&school=${school}&semester=${semester}`
     );
     if (res.status !== 200) {
         throw new Error('Failed to fetch course detail');
