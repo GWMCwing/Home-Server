@@ -1,4 +1,11 @@
-export type SectionType_HKUST = 'L' | 'LA' | 'T' | 'R';
+export type SectionType_HKUST =
+    typeof SectionType_HKUST[keyof typeof SectionType_HKUST];
+export const SectionType_HKUST = {
+    Lecture: 'L',
+    Tutorial: 'T',
+    Laboratory: 'LA',
+    R: 'R',
+} as const;
 
 export type SectionType = SectionType_HKUST;
 //
@@ -24,26 +31,26 @@ export function isDayOfWeek(dayOfWeek: string): dayOfWeek is DayOfWeek {
 }
 
 export class DateTime {
-    protected dayOfWeek: DayOfWeek[];
-    protected startTime: number[]; // number of minutes from 00:00
-    protected endTime: number[]; // number of minutes from 00:00
+    protected _dayOfWeek: DayOfWeek[];
+    protected _startTime: number[]; // number of minutes from 00:00
+    protected _endTime: number[]; // number of minutes from 00:00
     constructor(
         dayOfWeek: DayOfWeek[] = [],
         startTime: number[] = [],
         endTime: number[] = []
     ) {
-        this.dayOfWeek = dayOfWeek;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this._dayOfWeek = dayOfWeek;
+        this._startTime = startTime;
+        this._endTime = endTime;
     }
-    get getDayOfWeek() {
-        return this.dayOfWeek;
+    get dayOfWeek() {
+        return this._dayOfWeek;
     }
-    get getStartTime() {
-        return this.startTime;
+    get startTime() {
+        return this._startTime;
     }
-    get getEndTime() {
-        return this.endTime;
+    get endTime() {
+        return this._endTime;
     }
 }
 

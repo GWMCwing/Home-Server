@@ -49,7 +49,10 @@ async function getSectionName(
     $tdList: CheerioAPI[][]
 ): Promise<string> {
     const sectionText = $tdList[0][0].text();
-    return sectionText.split('(')[0].trimEnd().substring(1);
+    const nameText = sectionText.split('(')[0];
+    let i = 0;
+    for (; nameText[i] < '0' || nameText[i] > '9'; i++);
+    return nameText.substring(i).trim();
 }
 async function getSectionType(
     $Section: CheerioAPI,
@@ -230,10 +233,10 @@ export async function generate_HKUST_Section($Section: CheerioAPI) {
     const remarks = await getSectionRemarks($Section, $tdList);
     const requireConcent = await getSectionRequireConcent($Section, $tdList);
 
-    const dateTimeCount = dateTime.getDayOfWeek.length;
+    const dateTimeCount = dateTime.dayOfWeek.length;
     return new HKUST_Section(
-        id,
         name,
+        id,
         type,
         dateTime,
         location,

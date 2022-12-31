@@ -1,3 +1,4 @@
+//TODO make it json
 interface CourseList_config {
     test: boolean;
     testUrl: string;
@@ -12,5 +13,5 @@ export const courseList_config: CourseList_config = {
     baseUrl: 'http://w5.ab.ust.hk',
     url: 'http://w5.ab.ust.hk/wcq/cgi-bin',
     sleepTime: 250,
-    enable: false,
+    enable: true,
 } as const;
