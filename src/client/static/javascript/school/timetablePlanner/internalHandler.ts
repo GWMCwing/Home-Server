@@ -22,7 +22,22 @@ export class TimetableInternalHandler {
         });
         return courseList;
     }
-
+    async fetchCourse(
+        deptName: string,
+        courseId: string
+    ): Promise<CourseBase | null> {
+        if (!this.deptMap.has(deptName)) {
+            const courseList = await this.fetchCourseList(deptName).catch(
+                () => {
+                    return null;
+                }
+            );
+            if (courseList === null) {
+                return null;
+            }
+        }
+        return this.deptMap.get(deptName)?.get(courseId) ?? null;
+    }
     async fetchCourseList(deptName: string): Promise<CourseBase[]> {
         if (this.deptMap.has(deptName)) {
             const courseMap = this.deptMap.get(deptName);

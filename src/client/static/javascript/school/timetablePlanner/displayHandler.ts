@@ -1,4 +1,5 @@
 import { CourseBase } from '../../../../../res/type/CourseType';
+import { DomFactory } from './DomFactory.js';
 
 // handle all DOM manipulation
 type DomData = {
@@ -16,6 +17,7 @@ class DisplayHandler_Cache {
     //
     protected _timetableDom!: DomData;
     protected _plannerCourseDetailDom!: DomData;
+    protected _plannerCourseSuggestionDom!: DomData;
     constructor() {
         this.initDomCache();
         this.initDomDisplay();
@@ -45,6 +47,11 @@ class DisplayHandler_Cache {
         this._plannerCourseDetailDom = generateDomData(
             document.getElementById('planner-course-detail') as HTMLDivElement
         );
+        this._plannerCourseSuggestionDom = generateDomData(
+            document.getElementById(
+                'planner-course-suggestion'
+            ) as HTMLDivElement
+        );
     }
     hide(dom: DomData) {
         dom.dom.style.display = 'none';
@@ -56,6 +63,7 @@ class DisplayHandler_Cache {
         this.hide(this._backButtonDom);
         this.hide(this._courseSelectorListDom);
         this.hide(this._plannerCourseDetailDom);
+        this.hide(this._plannerCourseSuggestionDom);
     }
     // getter
     get deptSelectorListDom() {
@@ -65,6 +73,7 @@ class DisplayHandler_Cache {
         return this._backButtonDom.dom;
     }
 }
+//
 export class DisplayHandler extends DisplayHandler_Cache {
     constructor() {
         super();
@@ -92,6 +101,18 @@ export class DisplayHandler extends DisplayHandler_Cache {
             );
         });
     }
+    displayCourseDetail(course: CourseBase) {
+        this.show(this._plannerCourseDetailDom);
+        this.hide(this._plannerCourseSuggestionDom);
+        // remove the first child only, left is the button menu
+        this._plannerCourseDetailDom.dom.removeChild(
+            this._plannerCourseDetailDom.dom.firstChild as Node
+        );
+        this._plannerCourseDetailDom.dom.insertBefore(
+            DomFactory.courseDetailDom(course),
+            this._plannerCourseDetailDom.dom.firstChild
+        );
+    }
 }
 
 function generateDomData(dom: HTMLElement): DomData {
@@ -101,25 +122,4 @@ function generateDomData(dom: HTMLElement): DomData {
             originalDisplayState: dom.style.display,
         },
     };
-}
-class DomFactory {
-    static courseDom_selectorList(course: CourseBase): HTMLLIElement {
-        const courseDom = document.createElement('li');
-        courseDom.classList.add('course');
-        const courseIdDom = document.createElement('div');
-        courseIdDom.classList.add('course-id');
-        const courseNameDom = document.createElement('div');
-        courseNameDom.classList.add('course-name');
-        const courseCreditDom = document.createElement('div');
-        courseCreditDom.classList.add('course-credit');
-        //
-        courseDom.appendChild(courseIdDom);
-        courseDom.appendChild(courseCreditDom);
-        courseDom.appendChild(courseNameDom);
-        //
-        courseIdDom.textContent = `${course.dept} ${course.id}`;
-        courseNameDom.textContent = course.name;
-        courseCreditDom.textContent = `${course.credit} credits`;
-        return courseDom;
-    }
 }
