@@ -27,15 +27,15 @@ export const Regex_dayOfWeek = [
 ] as const;
 
 export function isDayOfWeek(dayOfWeek: string): dayOfWeek is DayOfWeek {
-    return dayOfWeek in DayOfWeek;
+    return Object.values(DayOfWeek).includes(dayOfWeek as DayOfWeek);
 }
 
 export class DateTime {
-    protected _dayOfWeek: DayOfWeek[];
+    protected _dayOfWeek: DayOfWeek[][];
     protected _startTime: number[]; // number of minutes from 00:00
     protected _endTime: number[]; // number of minutes from 00:00
     constructor(
-        dayOfWeek: DayOfWeek[] = [],
+        dayOfWeek: DayOfWeek[][] = [],
         startTime: number[] = [],
         endTime: number[] = []
     ) {

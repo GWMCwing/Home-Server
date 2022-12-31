@@ -97,20 +97,20 @@ async function getSectionDateTime(
     $Section: CheerioAPI,
     $tdList: CheerioAPI[][]
 ): Promise<DateTime> {
-    const dayOfWeek: DayOfWeek[] = [];
+    const dayOfWeek: DayOfWeek[][] = [];
     const startTime: number[] = [];
     const endTime: number[] = [];
     for (let i = 0; i < $tdList.length; i++) {
         //
         const timeText = $tdList[i][i > 0 ? 0 : 1].text();
         if (timeText === 'TBA') {
-            dayOfWeek.push(DayOfWeek.TBA);
+            dayOfWeek.push([DayOfWeek.TBA]);
             startTime.push(0);
             endTime.push(0);
             continue;
         }
         //
-        dayOfWeek.push(...(await parseDayOfWeek(timeText)));
+        dayOfWeek.push(await parseDayOfWeek(timeText));
         // some courses include day and month using -
         // => get the last 2 element to ensure is the time only
         const timeList = timeText.split('-').slice(-2);
