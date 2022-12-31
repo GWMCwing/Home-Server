@@ -116,10 +116,8 @@ async function getSectionDateTime(
         const timeList = timeText.split('-').slice(-2);
         const startTime_temp = await parseTime(timeList[0]);
         const endTime_temp = await parseTime(timeList[1]);
-        for (let j = 0; j < dayOfWeek.length; j++) {
-            startTime.push(startTime_temp);
-            endTime.push(endTime_temp);
-        }
+        startTime.push(startTime_temp);
+        endTime.push(endTime_temp);
     }
     return new DateTime(dayOfWeek, startTime, endTime);
 }
