@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import path from 'path';
 import { userCollection } from '../../database/databaseInterface';
-import { viewPath } from '../../util/common';
+import { config } from '../../../config/config';
 import { generateNavBarItemList } from '../navBar/navBarGenerator';
 export async function dashboardRenderer(req: Request, res: Response) {
     // TODO get from req, should be included when auth middleware auth successfully
@@ -14,5 +14,8 @@ export async function dashboardRenderer(req: Request, res: Response) {
         navBarList: generateNavBarItemList(req),
         userName: user.name,
     };
-    res.render(path.join(viewPath, 'dashboard', 'dashboard.pug'), pugObject);
+    res.render(
+        path.join(config.viewPath, 'dashboard', 'dashboard.pug'),
+        pugObject
+    );
 }

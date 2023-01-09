@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import { SchoolList } from '../../../util/common';
 import path from 'path';
-import { viewPath } from '../../../util/common';
+import { config } from '../../../../config/config';
 export async function timetableSelectorRendererCallback(
     req: Request,
     res: Response
@@ -11,7 +11,12 @@ export async function timetableSelectorRendererCallback(
         availableSchool: SchoolList,
     };
     res.render(
-        path.join(viewPath, 'school', 'timetable', 'timetableSelector.pug'),
+        path.join(
+            config.viewPath,
+            'school',
+            'timetable',
+            'timetableSelector.pug'
+        ),
         pugObject
     );
 }

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import path from 'path';
-import { errorPath } from './../../util/common';
+import { config } from '../../../config/config';
+const errorPath = config.errorPath;
 
 export function serveErrorPage(
     req: Request,

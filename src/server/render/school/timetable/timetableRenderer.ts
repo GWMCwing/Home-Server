@@ -1,9 +1,9 @@
 import { SchoolList } from '../../../util/common';
 import path from 'path';
-import { viewPath } from '../../../util/common';
 import { generateNavBarItemList } from '../../navBar/navBarGenerator';
 import { courseCollection } from '../../../database/databaseInterface';
 import { Request, Response } from 'express';
+import { config } from '../../../../config/config';
 //
 const semester = '2220';
 //
@@ -25,7 +25,7 @@ export async function timetableRendererCallback(req: Request, res: Response) {
         navBarList: generateNavBarItemList(req),
     };
     res.render(
-        path.join(viewPath, 'school', 'timetable', 'timetable.pug'),
+        path.join(config.viewPath, 'school', 'timetable', 'timetable.pug'),
         pugObject
     );
 }
