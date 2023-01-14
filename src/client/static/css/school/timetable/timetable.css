@@ -36,9 +36,10 @@ ul {
     margin-top: 1em;
     margin-left: auto;
     margin-right: auto;
-    display: grid;
-    grid-template-columns: 1fr 6fr;
-    /* justify-content: space-around; */
+    /* display: flex; */
+    display:grid;
+    grid-template-columns: 3fr 10fr;
+    justify-content: space-around;
     border: var(--outer-border-radius) solid var(--outer-border-color);
     border-radius: 2%;
     box-shadow: 0rem 0rem 1rem rgba(211, 211, 211, 0.219);
@@ -50,9 +51,10 @@ ul {
 #left-panel{
     /* flex: 0 0 auto; */
     border-right: 0.15rem solid var(--outer-border-color);
+    overflow-y: auto;
 }
 #right-panel{
-    /* flex: 1 1 auto; */
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
 }
@@ -62,6 +64,7 @@ ul {
 }
 #left-panel #course-list-container{
     text-align: left;
+    overflow-y: auto;
 }
 /* border for list of element*/
 .left-panel-list-element{

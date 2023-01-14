@@ -31,26 +31,17 @@ export function isDayOfWeek(dayOfWeek: string): dayOfWeek is DayOfWeek {
 }
 
 export class DateTime {
-    protected _dayOfWeek: DayOfWeek[][];
-    protected _startTime: number[]; // number of minutes from 00:00
-    protected _endTime: number[]; // number of minutes from 00:00
+    dayOfWeek: DayOfWeek[][];
+    startTime: number[]; // number of minutes from 00:00
+    endTime: number[]; // number of minutes from 00:00
     constructor(
         dayOfWeek: DayOfWeek[][] = [],
         startTime: number[] = [],
         endTime: number[] = []
     ) {
-        this._dayOfWeek = dayOfWeek;
-        this._startTime = startTime;
-        this._endTime = endTime;
-    }
-    get dayOfWeek() {
-        return this._dayOfWeek;
-    }
-    get startTime() {
-        return this._startTime;
-    }
-    get endTime() {
-        return this._endTime;
+        this.dayOfWeek = dayOfWeek;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 }
 

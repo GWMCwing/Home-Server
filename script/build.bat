@@ -3,4 +3,6 @@
 ECHO Compiling Client side Typescript && ^
 npx tsc --project tsconfig.client.json && ECHO Compile Complete && ^
 ECHO Compiling Server side Typescript && ^
-npx tsc --project tsconfig.server.json && ECHO Compile Complete
+npx tsc --project tsconfig.server.json && ECHO Compile Complete && ^
+ECHO Copying Client side files && ^
+npm run copyFiles && ECHO Copy Complete 

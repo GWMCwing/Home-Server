@@ -13,6 +13,7 @@ interface Config {
     publicJSPath: string;
     htmlStructurePath: string;
     errorPath: string;
+    semester: string;
 }
 const rootPath: string = path.join(__dirname, '..', '..');
 //
@@ -31,6 +32,7 @@ const config_prod: Config = {
         'structure'
     ),
     errorPath: path.join(rootPath, 'bin', 'client', 'html', 'error'),
+    semester: '2230',
 } as const;
 //
 const config_dev: Config = {
@@ -48,6 +50,7 @@ const config_dev: Config = {
         'structure'
     ),
     errorPath: path.join(rootPath, 'src', 'client', 'html', 'error'),
+    semester: '2230',
 } as const;
 
 let _config: Config;

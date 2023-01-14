@@ -5,7 +5,6 @@ import { courseCollection } from '../../../database/databaseInterface';
 import { Request, Response } from 'express';
 import { config } from '../../../../config/config';
 //
-const semester = '2220';
 //
 export async function timetableRendererCallback(req: Request, res: Response) {
     const schoolName = req.params.schoolName;
@@ -14,13 +13,13 @@ export async function timetableRendererCallback(req: Request, res: Response) {
         return;
     }
     const deptList = await courseCollection.distinct('dept', {
-        semester: '2220',
+        semester: config.semester,
         school: schoolName,
     });
     const pugObject = {
         schoolName: schoolName,
         school: schoolName,
-        semester: semester,
+        semester: config.semester,
         deptList: deptList,
         navBarList: generateNavBarItemList(req),
     };

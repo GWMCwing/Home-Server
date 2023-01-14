@@ -75,7 +75,8 @@ class _CourseDetailDomFactory {
         //
         courseDetailIdName.textContent = `${course.dept} ${course.id}`;
         courseDetailName.textContent = course.name;
-        courseDetailTag.textContent = 'TAG';
+        // courseDetailTag.textContent = 'TAG';
+        courseDetailTag.textContent = '';
         //
         return courseDetailTitleContainer;
     }
@@ -103,6 +104,9 @@ class _CourseDetailDomFactory {
 
         //
         sectionId.textContent = `${section.type}${section.id}`;
+        console.log('dateTime');
+        console.log(section);
+        console.log(section.dateTime);
         const dateTimeList = asStringList(section.dateTime);
         for (let i = 0; i < dateTimeList.length; i++) {
             const dateTime = dateTimeList[i];
