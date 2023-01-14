@@ -6,11 +6,47 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title Home Page
     link(rel='stylesheet', href='/resource/css/structure/general.css')
+    link(rel='stylesheet', href='/resource/css/homepage/homepage.css')
     body 
         include ../../structure/navBar.pug
         //- 
         //- 
-        p This is homePage
-        p Nothing is here, Timetable Planner is still developing
+        div#contentWrapper
+            p This is the HomePage
+            p Nothing is here yet~ I am too lazy (and "talented") to create the UI.
+            p New thing will be added to the navigation bar above if it is in development.
+            p.add-underline ~~~~I am Line Breaker~~~~
+            p Currently in Development: 
+            ul 
+                li 
+                    div
+                        a(href="") 
+                            span Home Server (This webpage)
+                        a.no-underline(href="https://github.com/GWMCwing/Home-Server") 
+                            img(src="https://img.shields.io/github/commit-activity/m/GWMCwing/Home-Server")
+                        a.no-underline(href="https://github.com/GWMCwing/Home-Server") 
+                            img(src="https://img.shields.io/github/last-commit/GWMCwing/Home-Server")
+                        div.indent
+                            p Usage: Personal webpage, application and photo gallery.
+                            p Applications hosting on this webpage:
+                            ul
+                                li
+                                    div
+                                        a(href="/school/timetable")
+                                            span Timetable Planner for University Courses
+                li 
+                    div
+                        a(href="https://discord.gg/HckMYE3r7f")
+                            span HKUST Quota Tracker
+                        div.indent
+                            p Usage: Notification for quota update of courses in HKUST (Because we are HKUST students)
+                            p 
+                                | Click 
+                                a(href="https://discord.gg/HckMYE3r7f") here
+                                |  to join.
+                            
+
+
+        
         //- 
         include ../../structure/footer.pug

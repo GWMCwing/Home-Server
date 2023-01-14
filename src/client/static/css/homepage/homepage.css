@@ -1,0 +1,23 @@
+li{
+    margin-top: 0.5rem;
+}
+.no-underline{
+    text-decoration: none;
+
+}
+.add-underline{
+    text-decoration: underline;
+}
+.indent{
+    margin-left: 1rem;
+}
+a{
+    
+}
+a:link, a:visited, a:active, a:hover {
+    color: blue;
+}
+
+#contentWrapper{
+    margin-left: 1rem;
+}
