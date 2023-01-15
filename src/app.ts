@@ -12,6 +12,7 @@ import { fetchAndUpdateCourseList_HKUST } from './server/tasks/courseList/fetchC
 // ---------- end of import ---------------
 const threadName = 'MAIN';
 //
+//
 const targetMongoUrl =
     process.env.CONNECTION_TARGET === 'CLOUD'
         ? (process.env.MONGODB_CLOUD_SSL as string)
@@ -27,8 +28,20 @@ CLL.log(
 );
 MongoClient.connect(targetMongoUrl, function (err, db) {
     if (err) throw err;
-    CLL.log(threadName, 'Mongodb', 'Connected to Mongodb');
     const isInDev = process.env.NODE_ENV === 'development';
-    startup_expressServer(app, db as MongoClient, config.port, isInDev);
+
+    CLL.log(
+        threadName,
+        'Process',
+        'Running as ' + (isInDev ? 'Development' : 'Production') + ' Mode'
+    );
+    CLL.log(threadName, 'Mongodb', 'Connected to Mongodb');
+    startup_expressServer(
+        app,
+        db as MongoClient,
+        config.http_port,
+        config.https_port,
+        isInDev
+    );
     fetchAndUpdateCourseList_HKUST();
 });

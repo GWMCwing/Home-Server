@@ -6,7 +6,8 @@ import path from 'path';
 require('dotenv').config();
 //
 interface Config {
-    port: number;
+    http_port: number;
+    https_port: number;
     mongodbUrl: string; // production same as development
     viewPath: string;
     cssPath: string;
@@ -18,7 +19,8 @@ interface Config {
 const rootPath: string = path.join(__dirname, '..', '..');
 //
 const config_prod: Config = {
-    port: 80,
+    http_port: 80,
+    https_port: 443,
     mongodbUrl: 'mongodb://localhost:27017', // same as development
     viewPath: path.join(rootPath, 'bin', 'client', 'html', 'view'),
     cssPath: path.join(rootPath, 'bin', 'client', 'static', 'css'),
@@ -36,7 +38,8 @@ const config_prod: Config = {
 } as const;
 //
 const config_dev: Config = {
-    port: 80,
+    http_port: 8080,
+    https_port: 8088,
     mongodbUrl: 'mongodb://localhost:27017',
     viewPath: path.join(rootPath, 'src', 'client', 'html', 'view'),
     cssPath: path.join(rootPath, 'src', 'client', 'static', 'css'),

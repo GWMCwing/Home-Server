@@ -31,7 +31,8 @@ function setupRequestParser(app: Express) {
 export function startup_expressServer(
     app: Express,
     db: MongoClient,
-    port: number,
+    http_port: number,
+    https_port: number,
     isInDev: boolean
 ) {
     //
@@ -65,8 +66,12 @@ export function startup_expressServer(
         cert: readFileSync(process.env.HTTPS_CERT as string),
         ca: readFileSync(process.env.HTTPS_CA as string),
     };
-    createServer_http(app).listen(port);
-    CLL.log(threadName, 'Express Startup', `Running http on port ${port}`);
-    createServer_https(https_options, app).listen(443);
-    CLL.log(threadName, 'Express Startup', `Running https on port 443`);
+    createServer_http(app).listen(http_port);
+    CLL.log(threadName, 'Express Startup', `Running http on port ${http_port}`);
+    createServer_https(https_options, app).listen(https_port);
+    CLL.log(
+        threadName,
+        'Express Startup',
+        `Running https on port ${https_port}`
+    );
 }
