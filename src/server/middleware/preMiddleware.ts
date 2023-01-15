@@ -1,41 +1,16 @@
 import { Application } from 'express';
-import helmet from 'helmet';
 import { MongoClient } from 'mongodb';
-import { config } from '../../config/config';
-import { CLL } from '../util/consoleLogging';
-
-import { preventCrawler } from './crawler/preventCrawler';
-import { commonHeader } from './header/commonHeader';
+import { httpRedirect } from './httpRedirect';
+import {
+    commonHeader,
+    preventCrawler,
+    helmetHeader,
+} from './header/commonHeader';
 
 export function loadPreMiddleware(app: Application, db: MongoClient) {
     // redirect http request to https
     app.use(preventCrawler);
     app.use(commonHeader);
-    app.use(
-        helmet({
-            contentSecurityPolicy: {
-                directives: {
-                    'default-src': 'https: ws:',
-                    'script-src': null,
-                    'img-src': null,
-                },
-            },
-            crossOriginEmbedderPolicy: {
-                policy: 'credentialless',
-            },
-        })
-    );
-    app.use((req, res, next) => {
-        if (req.secure) next();
-        else {
-            CLL.log(
-                'Middleware',
-                'Redirection',
-                'Redirected from http to https'
-            );
-            res.redirect(
-                'https://' + req.hostname + ':' + config.https_port + req.url
-            );
-        }
-    });
+    app.use(helmetHeader());
+    app.use(httpRedirect);
 }
