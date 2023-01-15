@@ -16,8 +16,8 @@
     "testServer": "start cmd.exe @cmd /k \"title Test Server && cd E:/Coding/AddDrop-WebServer && nodemon bin/app.js\"",
     "copyFiles": ".\\script\\copyFiles.bat",
     "copyFiles_linux": "./script/copyFiles.sh",
-    "build": "npm run copyFiles && .\\script\\build.bat",
-    "build_linux": "npm run copyFiles && ./script/build.sh",
+    "build": ".\\script\\build.bat",
+    "build_linux": "./script/build.sh",
     "start": "npm run build && ECHO Starting... && npm run startOnly",
     "startOnly": "start cmd.exe @cmd /k \"node ./bin/app.js\"",
     "startmon": "npm run build && ECHO Starting monitor... && start cmd.exe @cmd /k \"nodemon ./bin/app.js\""
