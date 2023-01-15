@@ -11,18 +11,20 @@ export function loadPreMiddleware(app: Application, db: MongoClient) {
     // redirect http request to https
     app.use(preventCrawler);
     app.use(commonHeader);
-    /** disable until src is fixed
     app.use(
         helmet({
             contentSecurityPolicy: {
                 directives: {
-                    'script-src': 'unsafe-inline',
+                    'default-src': 'https:',
+                    'script-src': null,
                     'img-src': null,
                 },
             },
+            crossOriginEmbedderPolicy: {
+                policy: 'credentialless',
+            },
         })
     );
-    */
     app.use((req, res, next) => {
         if (req.secure) next();
         else {
