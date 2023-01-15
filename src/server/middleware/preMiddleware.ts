@@ -15,7 +15,7 @@ export function loadPreMiddleware(app: Application, db: MongoClient) {
         helmet({
             contentSecurityPolicy: {
                 directives: {
-                    'default-src': 'https:',
+                    'default-src': 'https: ws:',
                     'script-src': null,
                     'img-src': null,
                 },
