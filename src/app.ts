@@ -14,8 +14,8 @@ const threadName = 'MAIN';
 //
 //
 const targetMongoUrl =
-    process.env.CONNECTION_TARGET === 'CLOUD'
-        ? (process.env.MONGODB_CLOUD_SSL as string)
+    process.env.CONNECTION_TARGET === 'REMOTE'
+        ? (process.env.MONGODB_REMOTE_SSL as string)
         : config.mongodbUrl;
 //
 CLL.log(threadName, 'Internal', 'Starting up internal handler...');
@@ -26,8 +26,11 @@ CLL.log(
     'MongoDb',
     `Connecting to MongoDb... (${process.env.CONNECTION_TARGET})`
 );
-MongoClient.connect(targetMongoUrl, function (err, db) {
-    if (err) throw err;
+async function main() {
+    const db = await MongoClient.connect(targetMongoUrl).catch((err) => {
+        CLL.error(threadName, 'Mongodb', err);
+        throw new Error('Cannot Connect to Mongodb');
+    });
     const isInDev = process.env.NODE_ENV === 'development';
 
     CLL.log(
@@ -38,10 +41,12 @@ MongoClient.connect(targetMongoUrl, function (err, db) {
     CLL.log(threadName, 'Mongodb', 'Connected to Mongodb');
     startup_expressServer(
         app,
-        db as MongoClient,
+        db,
         config.http_port,
         config.https_port,
         isInDev
     );
     fetchAndUpdateCourseList_HKUST();
-});
+}
+//
+main().catch((err) => CLL.error(threadName, 'Main', err));
