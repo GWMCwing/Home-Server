@@ -14,8 +14,38 @@ import { MongoClient } from 'mongodb';
 import { readFileSync } from 'fs';
 //
 const threadName = 'Main';
+const morgan_dateTimeFormatter = new Intl.DateTimeFormat([], {
+    timeZone: 'Asia/Hong_Kong',
+    hour12: false,
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    fractionalSecondDigits: 3,
+});
+//
+function morganSetup() {
+    morgan.token('date', function () {
+        const f2 = morgan_dateTimeFormatter
+            .formatToParts(new Date())
+            .filter((v) => {
+                return v.type != 'literal';
+            });
+        // console.log(f2);
+        const f3: Record<string, string> = {};
+        for (let i = 0; i < f2.length; i++) {
+            f3[f2[i].type] = f2[i].value;
+        }
+        return `${f3.day}/${f3.month}/${f3.year}-${f3.hour}:${f3.minute}:${f3.second}`;
+    });
+}
 //
 function setupLogging(app: Express, isInDev: boolean) {
+    //
+    morganSetup();
     if (isInDev) {
         app.use(morgan('dev'));
     } else {
@@ -40,6 +70,7 @@ export function startup_expressServer(
     //
     // console.log('setting');
     setupLogging(app, isInDev);
+    //
     setupRendering(app);
 
     app.set('trust proxy', 1);
