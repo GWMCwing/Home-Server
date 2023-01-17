@@ -1,4 +1,3 @@
-import WebSocket from 'ws';
 import {
     WebSocketCallback,
     WebSocketCallback_addListener,
@@ -18,7 +17,6 @@ import {
     WebSocketListenerObj,
 } from '../../../res/type/WebSocket';
 import { CLL } from '../../util/consoleLogging';
-// TODO: rebuild instant call the event listener setting to wss instead of queueing
 //
 
 //
@@ -29,16 +27,21 @@ export class WebSocketRouter {
     parentRouter: WebSocketRouter | null;
     nextRouter: Record<string, WebSocketRouter> = {};
     eventListener:
-        | Record<WebSocketListener, Record<WebSocketEvent, WebSocketCallback[]>>
+        | Record<
+              WebSocketListener,
+              | Record<WebSocketEvent, WebSocketCallback[]>
+              | Record<string, never>
+          >
         | Record<string, never> = {};
-    wss: WebSocket.Server<WebSocket.WebSocket>;
-    constructor(
-        path: string,
-        wss: WebSocket.Server<WebSocket.WebSocket>,
-        parentRouter: WebSocketRouter | null = null
-    ) {
+    constructor(path: string, parentRouter: WebSocketRouter | null = null) {
+        if (path.includes('/', 1))
+            CLL.warn(
+                threadName,
+                'RoutePath',
+                'Multi-Depth path found, support for routing maybe incorrect: ',
+                path
+            );
         this.path = path;
-        this.wss = wss;
         this.parentRouter = parentRouter;
     }
     //
@@ -55,14 +58,29 @@ export class WebSocketRouter {
                 this.getPath()
             );
         this.nextRouter[router.path] = router;
+        console.log(this.path, 'Added: ', router.path);
+        router.setParentRouter(this);
         return this;
     }
+    setParentRouter(router: WebSocketRouter) {
+        this.parentRouter = router;
+    }
     getRouter(path: string): WebSocketRouter | null {
-        if (path === this.path) return this;
-        if (!this.parentRouter) path = '/' + path; // root router has '/'
-        const subPath = path.slice(this.path.length);
-        if (!this.nextRouter[subPath]) return null;
-        return this.nextRouter[subPath].getRouter(subPath);
+        if (path == this.path) return this;
+        if (!this.parentRouter) path = '/' + path;
+        //remove this.path from string
+        const subpath = path.slice(this.path.length);
+        // get the next routePath
+        const indexOfNext = subpath.indexOf('/', 1);
+        let nextPath: string;
+        if (indexOfNext == -1) {
+            nextPath = subpath;
+        } else {
+            nextPath = subpath.slice(0, indexOfNext);
+        }
+        if (this.nextRouter[nextPath])
+            return this.nextRouter[nextPath].getRouter(subpath);
+        return null;
     }
     //
     // getter for event listener
@@ -98,6 +116,7 @@ export class WebSocketRouter {
         cb: WebSocketCallback_close | WebSocketCallback_listening
     ): WebSocketRouter;
     on(event: WebSocketEvent, cb: WebSocketCallback): WebSocketRouter {
+        if (!this.eventListener.on) this.eventListener.on = {};
         if (!this.eventListener.on[event]) {
             this.eventListener.on[event] = [];
         }
@@ -116,6 +135,7 @@ export class WebSocketRouter {
         cb: WebSocketCallback_close | WebSocketCallback_listening
     ): WebSocketRouter;
     once(event: WebSocketEvent, cb: WebSocketCallback): WebSocketRouter {
+        if (!this.eventListener.once) this.eventListener.once = {};
         if (!this.eventListener.once[event]) {
             this.eventListener.once[event] = [];
         }
@@ -134,6 +154,7 @@ export class WebSocketRouter {
         event: WebSocketEvent,
         cb: WebSocketCallback_addListener
     ): WebSocketRouter {
+        if (!this.eventListener.off) this.eventListener.off = {};
         if (!this.eventListener.off[event]) {
             this.eventListener.off[event] = [];
         }
