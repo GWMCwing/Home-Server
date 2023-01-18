@@ -6,9 +6,10 @@ const app = express();
 //
 import { config } from './config/config';
 import { CLL } from './server/util/consoleLogging';
-import { startup_expressServer } from './server/startup/expressServerSetup';
+import { setup_expressServer } from './server/startup/expressServerSetup';
 import { startup_internalHandler } from './server/startup/internalHandler';
 import { fetchAndUpdateCourseList_HKUST } from './server/tasks/courseList/fetchCourseList_HKUST';
+import { setup_webSocketServer } from './server/startup/websocketServerSetup';
 // ---------- end of import ---------------
 const threadName = 'MAIN';
 //
@@ -39,13 +40,24 @@ async function main() {
         'Running as ' + (isInDev ? 'Development' : 'Production') + ' Mode'
     );
     CLL.log(threadName, 'Mongodb', 'Connected to Mongodb');
-    startup_expressServer(
-        app,
-        db,
-        config.http_port,
-        config.https_port,
-        isInDev
+    const { httpServer, httpsServer } = setup_expressServer(app, db, isInDev);
+    //
+    setup_webSocketServer(httpsServer, isInDev);
+    //
+    httpServer.listen(config.http_port);
+    CLL.log(
+        threadName,
+        'Express Startup',
+        `Running http on port ${config.http_port}`
     );
+    httpsServer.listen(config.https_port);
+    CLL.log(
+        threadName,
+        'Express Startup',
+        `Running https on port ${config.https_port}`
+    );
+
+    //
     fetchAndUpdateCourseList_HKUST();
 }
 //
