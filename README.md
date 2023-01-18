@@ -18,15 +18,15 @@ This Web Server is designed to be run on nodejs 16 with mongodb 6.0.3. Docker im
 
 1. Clone or fork this repo and run `npm install` to install all dependencies.
 2. Setup Environment Variables
-   - If you are running in a development environment, create a `.env` file in the root directory and add the environment variables stated in the [required.md](./required.md) file.
-   - If you are running in a production environment, follow the instructions in the [required.md](./required.md) file.
+   - If you are running in a development environment, create a `.env` file in the root directory and add the environment variables stated in the [required.md](./doc/required.md) file.
+   - If you are running in a production environment, follow the instructions in the [required.md](./doc/required.md) file.
    - Do **NOT** add any environment variables in `.env` when running as a production environment. (Future update will remove the import on `.env` during production.)
 3. Run `npm run build_linux` to build the project. / `npm run build` to build the project for windows.
 4. Run `npm run startOnly` to start the server.
 
 ## Required Configuration
 
-See [required.md](./required.md) for required configuration.
+See [required.md](./doc/required.md) for required configuration.
 
 ## Notes
 
