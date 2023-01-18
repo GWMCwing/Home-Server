@@ -1,9 +1,0 @@
-Make task as a separate instance 
-
-
-
-fetchCourseList
-modify client side js
-separate interface from the server to database or another git repo
-Store persistent data in mount volume instead of the container
-Webpack for client side js
