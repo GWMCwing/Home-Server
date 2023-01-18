@@ -9,6 +9,7 @@ export class WebSocketHandler {
     static #instance: WebSocketHandler;
     #wss!: WebSocket.Server<WebSocket.WebSocket>;
     #rootRouter!: WebSocketRouter;
+    #routeMap: Map<string, WebSocketRouter> = new Map();
     #isInDev!: boolean;
     constructor(
         server: Server<typeof IncomingMessage, typeof ServerResponse>,
@@ -24,12 +25,18 @@ export class WebSocketHandler {
         };
         this.#wss = new WebSocket.Server(WebSocketOption);
         this.#rootRouter = rootRouter;
+        this.updateMapping('/', rootRouter);
         this.#isInDev = isInDev;
         this.#setupHandler();
     }
     #getRouter(path: string): WebSocketRouter | null {
-        //TODO: get from map instead of searching, update map after a miss but hit on depth search
-        return this.#rootRouter.getRouter(path);
+        // TODO: only update routeMap when update is called
+        let router = this.#routeMap.get(path) || null;
+        if (router) return router;
+        router = this.#rootRouter.getRouter(path);
+        if (!router) return null;
+        this.updateMapping(router.path, router);
+        return router;
     }
     #setupHandler() {
         this.#setupListener_on();
@@ -149,7 +156,7 @@ export class WebSocketHandler {
         //TODO: Map route after first build
     }
     updateMapping(fullPath: string, router: WebSocketRouter) {
-        //TODO: update map route after first build
+        this.#routeMap.set(fullPath, router);
     }
     //
     get rootRouter() {

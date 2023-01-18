@@ -18,21 +18,17 @@ import {
 } from '../../../res/type/WebSocket';
 import { CLL } from '../../util/consoleLogging';
 //
-
 //
 const threadName = 'WebSocketRouter';
 
 export class WebSocketRouter {
     path: string;
     parentRouter: WebSocketRouter | null;
-    nextRouter: Record<string, WebSocketRouter> = {};
-    eventListener:
-        | Record<
-              WebSocketListener,
-              | Record<WebSocketEvent, WebSocketCallback[]>
-              | Record<string, never>
-          >
-        | Record<string, never> = {};
+    nextRouter: Map<string, WebSocketRouter> = new Map();
+    eventListener: Map<
+        WebSocketListener,
+        Map<WebSocketEvent, WebSocketCallback[]>
+    > = new Map();
     constructor(path: string, parentRouter: WebSocketRouter | null = null) {
         if (path.includes('/', 1))
             CLL.warn(
@@ -50,14 +46,14 @@ export class WebSocketRouter {
         return this.parentRouter.getPath() + this.path;
     }
     addRouter(router: WebSocketRouter): WebSocketRouter {
-        if (this.nextRouter[router.path])
+        if (this.nextRouter.get(router.path))
             CLL.warn(
                 threadName,
                 'AddRouter',
                 'Overriding Router at Path: ',
                 this.getPath()
             );
-        this.nextRouter[router.path] = router;
+        this.nextRouter.set(router.path, router);
         console.log(this.path, 'Added: ', router.path);
         router.setParentRouter(this);
         return this;
@@ -78,9 +74,10 @@ export class WebSocketRouter {
         } else {
             nextPath = subpath.slice(0, indexOfNext);
         }
-        if (this.nextRouter[nextPath])
-            return this.nextRouter[nextPath].getRouter(subpath);
-        return null;
+        // if (this.nextRouter[nextPath])
+        //     return this.nextRouter[nextPath].getRouter(subpath);
+        // return null;
+        return this.nextRouter.get(nextPath)?.getRouter(subpath) || null;
     }
     //
     // getter for event listener
@@ -104,8 +101,7 @@ export class WebSocketRouter {
         listenerType: WebSocketListener,
         event: WebSocketEvent
     ): WebSocketCallback[] {
-        if (!this.eventListener[listenerType]) return [];
-        return this.eventListener[listenerType][event] || [];
+        return this.eventListener.get(listenerType)?.get(event) || [];
     }
     // setter for event listener
     on(event: 'connection', cb: WebSocketCallback_connection): WebSocketRouter;
@@ -116,11 +112,19 @@ export class WebSocketRouter {
         cb: WebSocketCallback_close | WebSocketCallback_listening
     ): WebSocketRouter;
     on(event: WebSocketEvent, cb: WebSocketCallback): WebSocketRouter {
-        if (!this.eventListener.on) this.eventListener.on = {};
-        if (!this.eventListener.on[event]) {
-            this.eventListener.on[event] = [];
+        if (!this.eventListener.has('on'))
+            this.eventListener.set('on', new Map());
+        const eventListener_on = this.eventListener.get('on') as Map<
+            WebSocketEvent,
+            WebSocketCallback[]
+        >;
+        if (!eventListener_on.get(event)) {
+            eventListener_on.set(event, []);
         }
-        this.eventListener.on[event].push(cb);
+        const eventListener_on_event = eventListener_on.get(
+            event
+        ) as WebSocketCallback[];
+        eventListener_on_event.push(cb);
         return this;
     }
     //
@@ -135,11 +139,25 @@ export class WebSocketRouter {
         cb: WebSocketCallback_close | WebSocketCallback_listening
     ): WebSocketRouter;
     once(event: WebSocketEvent, cb: WebSocketCallback): WebSocketRouter {
-        if (!this.eventListener.once) this.eventListener.once = {};
-        if (!this.eventListener.once[event]) {
-            this.eventListener.once[event] = [];
+        // if (!this.eventListener.once) this.eventListener.once = {};
+        // if (!this.eventListener.once[event]) {
+        //     this.eventListener.once[event] = [];
+        // }
+        // this.eventListener.once[event].push(cb);
+        // return this;
+        if (!this.eventListener.has('once'))
+            this.eventListener.set('once', new Map());
+        const eventListener_once = this.eventListener.get('once') as Map<
+            WebSocketEvent,
+            WebSocketCallback[]
+        >;
+        if (!eventListener_once.get(event)) {
+            eventListener_once.set(event, []);
         }
-        this.eventListener.once[event].push(cb);
+        const eventListener_once_event = eventListener_once.get(
+            event
+        ) as WebSocketCallback[];
+        eventListener_once_event.push(cb);
         return this;
     }
     //
@@ -154,11 +172,25 @@ export class WebSocketRouter {
         event: WebSocketEvent,
         cb: WebSocketCallback_addListener
     ): WebSocketRouter {
-        if (!this.eventListener.off) this.eventListener.off = {};
-        if (!this.eventListener.off[event]) {
-            this.eventListener.off[event] = [];
+        // if (!this.eventListener.off) this.eventListener.off = {};
+        // if (!this.eventListener.off[event]) {
+        //     this.eventListener.off[event] = [];
+        // }
+        // this.eventListener.off[event].push(cb);
+        // return this;
+        if (!this.eventListener.has('off'))
+            this.eventListener.set('off', new Map());
+        const eventListener_off = this.eventListener.get('off') as Map<
+            WebSocketEvent,
+            WebSocketCallback[]
+        >;
+        if (!eventListener_off.get(event)) {
+            eventListener_off.set(event, []);
         }
-        this.eventListener.off[event].push(cb);
+        const eventListener_off_event = eventListener_off.get(
+            event
+        ) as WebSocketCallback[];
+        eventListener_off_event.push(cb);
         return this;
     }
     //
@@ -183,11 +215,13 @@ export class WebSocketRouter {
         event: WebSocketEvent,
         cb: WebSocketCallback_remove
     ): WebSocketRouter {
+        //TODO: require testing
         for (const key of Object.entries(WebSocketListenerObj)) {
-            const listenerList = this.eventListener[key[1]][event];
+            const listenerList =
+                this.eventListener.get(key[1])?.get(event) || [];
             for (let i = 0; i < listenerList.length; i++) {
                 if (listenerList[i] === cb) {
-                    this.eventListener[key[1]][event].splice(i);
+                    listenerList.splice(i);
                     return this;
                 }
             }
