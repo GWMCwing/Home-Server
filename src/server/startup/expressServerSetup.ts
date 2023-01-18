@@ -8,7 +8,12 @@ import { setupRouter } from '../router/rootRouter';
 import { loadErrorHandlerMiddleware } from '../middleware/errorHandlerMiddleware';
 //
 import { Express } from 'express';
-import { createServer as createServer_http } from 'http';
+import {
+    createServer as createServer_http,
+    IncomingMessage,
+    Server,
+    ServerResponse,
+} from 'http';
 import { createServer as createServer_https } from 'https';
 import { MongoClient } from 'mongodb';
 import { readFileSync } from 'fs';
@@ -68,13 +73,14 @@ function setupRequestParser(app: Express) {
 }
 //
 //
-export function startup_expressServer(
+export function setup_expressServer(
     app: Express,
     db: MongoClient,
-    http_port: number,
-    https_port: number,
     isInDev: boolean
-) {
+): {
+    httpServer: Server<typeof IncomingMessage, typeof ServerResponse>;
+    httpsServer: Server<typeof IncomingMessage, typeof ServerResponse>;
+} {
     //
     // console.log('setting');
     setupLogging(app, isInDev);
@@ -97,22 +103,14 @@ export function startup_expressServer(
     setupRouter(app);
     //
     loadErrorHandlerMiddleware(app);
-
-    // app.listen(port, function () {
-    //     CLL.log(threadName, 'Express Startup', `Running on port ${port}`);
-    // });
+    //
     CLL.log(threadName, 'Express Startup', 'Loading key');
     const https_options = {
         key: readFileSync(process.env.HTTPS_KEY as string),
         cert: readFileSync(process.env.HTTPS_CERT as string),
         ca: readFileSync(process.env.HTTPS_CA as string),
     };
-    createServer_http(app).listen(http_port);
-    CLL.log(threadName, 'Express Startup', `Running http on port ${http_port}`);
-    createServer_https(https_options, app).listen(https_port);
-    CLL.log(
-        threadName,
-        'Express Startup',
-        `Running https on port ${https_port}`
-    );
+    const httpServer = createServer_http(app);
+    const httpsServer = createServer_https(https_options, app);
+    return { httpServer: httpServer, httpsServer: httpsServer };
 }
