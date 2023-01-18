@@ -54,6 +54,14 @@ function setupLogging(app: Express, isInDev: boolean) {
 }
 function setupRendering(app: Express) {
     app.set('view engine', 'pug');
+    if (process.env.PUG_CACHE === 'disable') {
+        CLL.log(
+            threadName,
+            'Rendering',
+            'Template Engine (PUG) cache is disabled'
+        );
+        app.disable('view cache');
+    }
 }
 function setupRequestParser(app: Express) {
     app.use(cookieParser());
