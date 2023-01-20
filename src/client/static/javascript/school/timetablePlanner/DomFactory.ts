@@ -103,10 +103,10 @@ class _CourseDetailDomFactory {
         sectionId.classList.add('section-id');
 
         //
-        sectionId.textContent = `${section.type}${section.id}`;
-        console.log('dateTime');
-        console.log(section);
-        console.log(section.dateTime);
+        sectionId.textContent = `${section.type}${section.name}`;
+        // console.log('dateTime');
+        // console.log(section);
+        // console.log(section.dateTime);
         const dateTimeList = asStringList(section.dateTime);
         for (let i = 0; i < dateTimeList.length; i++) {
             const dateTime = dateTimeList[i];
@@ -162,10 +162,11 @@ class _CourseDetailDomFactory {
         //
         const sectionList = course.sectionList;
         let sectionType: SectionType | null = null;
-        const sectionList_type: SectionBase[] = [];
+        let sectionList_type: SectionBase[] = [];
+        // console.log(sectionList);
         for (let i = 0; i < sectionList.length; i++) {
             const section = sectionList[i];
-            console.log(JSON.stringify(section, null, 2));
+            // console.log(JSON.stringify(section.id, null, 2));
             if (sectionType === null) {
                 sectionType = section.type;
             } else if (section.type !== sectionType) {
@@ -175,6 +176,7 @@ class _CourseDetailDomFactory {
                 );
                 courseDetailBoxContainer.appendChild(sectionBoxContainerDom);
                 sectionType = section.type;
+                sectionList_type = [];
             }
             sectionList_type.push(section);
         }

@@ -12,6 +12,6 @@ export const courseList_config: CourseList_config = {
     testUrl: 'http://localhost:5555',
     baseUrl: 'http://w5.ab.ust.hk',
     url: 'http://w5.ab.ust.hk/wcq/cgi-bin',
-    sleepTime: 250,
+    sleepTime: 300,
     enable: false,
 } as const;

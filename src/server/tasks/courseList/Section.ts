@@ -87,7 +87,7 @@ async function parseTime(str: string): Promise<number> {
         return (
             parseInt(time[1]) * 60 +
             parseInt(time[2]) +
-            (time[3] === 'PM' ? 12 * 60 : 0)
+            (time[3] === 'PM' && time[2] != '12' ? 12 * 60 : 0)
         );
     } else {
         return -1;

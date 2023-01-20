@@ -4,6 +4,15 @@
     --outer-border-radius: 0.2rem;
     --left-panel-padding-left: 0.3rem;
 }
+::-webkit-scrollbar{
+    display:block;
+    width: 5px;
+    overflow:auto;
+    height:auto;
+}
+::-webkit-scrollbar-thumb{
+    background-color:lightgray;
+}
 body{
     background-color: white;
     color: black;
@@ -133,16 +142,50 @@ ul {
 /* #right-panel #planner-sub-menu */
 #right-panel #planner-sub-menu #planner-course-detail{
     /* display: none; */
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 #right-panel #planner-sub-menu #planner-course-suggestion{
 
+}
+#planner-course-detail-box-container{
+    overflow:hidden;
+    box-sizing: border-box;
+    border: 1px solid lightslategray;
+    overflow-x: hidden;
+    border-radius: 2%;
+    display:flex;
 }
 /* #right-panel #planner-sub-menu #planner-course-detail */
 #right-panel #planner-sub-menu #planner-course-detail .title-container{
 
 }
 #right-panel #planner-sub-menu #planner-course-detail .detail-box-container{
-
+}
+#right-panel #planner-sub-menu #planner-course-detail .detail-box-container .section-box-container{
+    width:calc(100%/3);
+    min-height:100px;
+    max-height:200px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+#right-panel #planner-sub-menu #planner-course-detail .detail-box-container .section-box-container:not(:nth-child(3)){
+    border-right:2px solid lightgray;
+}
+.section-box{
+    margin-top:0.25rem;
+    margin-bottom:0.25rem;
+    display: flex;
+    justify-content: space-between;
+}
+.section-box:nth-child(even){
+    background-color: rgb(235, 235, 235);
+}
+.section-box .section-id{
+    margin-left: 0.5rem
+}
+.section-box .dateTime-container{
+    margin-right: 0.5rem
 }
 #planner-course-detail-box-menu{
     display:flex;
