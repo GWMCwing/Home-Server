@@ -1,6 +1,13 @@
 {
   "dependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^29.4.0",
+    "@types/node": "^16.18.12",
     "@types/morgan": "^1.9.3",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
     "@types/ws": "^8.5.4",
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12",
@@ -12,12 +19,17 @@
     "mongodb": "^4.8.0",
     "morgan": "^1.10.0",
     "pbkdf2-password": "^1.2.1",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "web-vitals": "^3.1.1"
   },
   "scripts": {
     "testServer": "start cmd.exe @cmd /k \"title Test Server && cd E:/Coding/AddDrop-WebServer && nodemon bin/app.js\"",
     "copyFiles": ".\\script\\copyFiles.bat",
-    "copyFiles_linux": "./script/copyFiles.sh",
+    "copyFiles_linux": "sh ./script/copyFiles.sh",
+    "buildReact_linux": "sh ./script/buildReact.sh",
     "build": ".\\script\\build.bat",
     "build_linux": "./script/build.sh",
     "start": "npm run build && ECHO Starting... && npm run startOnly",

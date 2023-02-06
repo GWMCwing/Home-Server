@@ -16,6 +16,7 @@
         "removeComments": true,
         "allowJs": true,
         "checkJs": true,
+        "jsx": "react-jsx",
         // dev
         "noEmitOnError": true,
         "lib": ["es2021", "dom"]

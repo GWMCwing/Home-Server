@@ -4,5 +4,11 @@
         "module": "ES6",
         "sourceMap": false // false to disable sending map file and ts to client
     },
-    "exclude": ["src/server", "src/res", "src/app.ts", "src/config"]
+    "exclude": [
+        "src/server",
+        "src/res",
+        "src/app.ts",
+        "src/config",
+        "src/client/react"
+    ]
 }
