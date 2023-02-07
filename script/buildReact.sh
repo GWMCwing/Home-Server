@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo Creating Symlink to node_modules && \
+sh $PWD/script/createSymlink.sh && echo Symlink Created && \
+# 
 cd $PWD/src/client/react
 # build react app in each sub directory
 for d in */ ; do
@@ -12,3 +15,4 @@ for d in */ ; do
     npm --prefix $PWD run build
     cd ..
 done
+echo Build Complete 
