@@ -27,14 +27,12 @@
   },
   "scripts": {
     "testServer": "start cmd.exe @cmd /k \"title Test Server && cd E:/Coding/AddDrop-WebServer && nodemon bin/app.js\"",
-    "copyFiles": ".\\script\\copyFiles.bat",
-    "copyFiles_linux": "sh ./script/copyFiles.sh",
-    "buildReact_linux": "sh ./script/buildReact.sh",
-    "build": ".\\script\\build.bat",
-    "build_linux": "./script/build.sh",
-    "start": "npm run build && ECHO Starting... && npm run startOnly",
-    "startOnly": "start cmd.exe @cmd /k \"node ./bin/app.js\"",
-    "startmon": "npm run build && ECHO Starting monitor... && start cmd.exe @cmd /k \"nodemon ./bin/app.js\""
+    "copyFiles": "sh ./script/copyFiles.sh",
+    "buildReact": "sh ./script/buildReact.sh",
+    "buildAll": "sh ./script/buildAll.sh",
+    "buildServer":"sh ./script/buildServer.sh",
+    "start": "node ./bin/app.js"
+
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",

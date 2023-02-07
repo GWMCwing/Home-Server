@@ -11,6 +11,7 @@ interface Config {
     mongodbUrl: string; // production same as development
     viewPath: string;
     cssPath: string;
+    reactPath: string;
     publicJSPath: string;
     htmlStructurePath: string;
     errorPath: string;
@@ -24,6 +25,7 @@ const config_prod: Config = {
     mongodbUrl: 'mongodb://localhost:27017', // same as development
     viewPath: path.join(rootPath, 'bin', 'client', 'html', 'view'),
     cssPath: path.join(rootPath, 'bin', 'client', 'static', 'css'),
+    reactPath: path.join(rootPath, 'bin', 'client', 'react'),
     publicJSPath: path.join(rootPath, 'bin', 'client', 'static', 'javascript'),
     htmlStructurePath: path.join(
         rootPath,
@@ -43,6 +45,7 @@ const config_dev: Config = {
     mongodbUrl: 'mongodb://localhost:27017',
     viewPath: path.join(rootPath, 'src', 'client', 'html', 'view'),
     cssPath: path.join(rootPath, 'src', 'client', 'static', 'css'),
+    reactPath: path.join(rootPath, 'bin', 'client', 'react'), // this one can only be in bin as building is required for js
     publicJSPath: path.join(rootPath, 'bin', 'client', 'static', 'javascript'),
     htmlStructurePath: path.join(
         rootPath,

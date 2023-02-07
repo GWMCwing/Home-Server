@@ -8,6 +8,7 @@ import { hash } from '../util/common';
 import { API_Router } from './API/API_Router';
 
 import { Express } from 'express';
+import { reactRouter } from './react/reactRouter';
 function setupDevRouter(app: Express) {
     console.warn('Using non production methods in rootRouter');
     app.get('/createLogin', (req, res) => {
@@ -37,6 +38,7 @@ export function setupRouter(app: Express) {
     app.use(...loginRouter());
     app.use(...dashboardRouter());
     app.use(...schoolRouter());
+    app.use(...reactRouter());
     if (process.env.NODE_ENV === 'development') {
         setupDevRouter(app);
     }
