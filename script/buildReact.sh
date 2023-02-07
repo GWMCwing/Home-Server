@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#? TODO run each build in a sub shell and return 1 if fail and pause
+
 echo Creating Symlink to node_modules && \
 sh $PWD/script/createSymlink.sh && echo Symlink Created
 # 

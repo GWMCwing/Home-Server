@@ -10,4 +10,5 @@ export function redirectReactStatic(
     // //
     // const appName = pathList[2];
     // res.redirect()
+    next();
 }
