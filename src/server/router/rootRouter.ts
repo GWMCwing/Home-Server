@@ -11,8 +11,10 @@ import { Express } from 'express';
 import { reactRouter } from './react/reactRouter';
 function setupDevRouter(app: Express) {
     console.warn('Using non production methods in rootRouter');
-    app.get('/createLogin', (req, res) => {
-        const { name, password } = req.query;
+    app.post('/createLogin_Test', (req, res) => {
+        // const { name, password } = req.body;
+        const name = req.body.user;
+        const password = req.body.password;
         hash(
             { password: password as string },
             function (err, pass, salt, hash) {
