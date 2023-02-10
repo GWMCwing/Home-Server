@@ -1,5 +1,5 @@
 import { userManager } from '../../user/userManager';
-import { regenerateSession } from '../../middleware/authentication/authSession';
+import { regenerateSession } from '../../middleware/authentication/authSession_old';
 import { Response, Request } from 'express';
 import { User } from '../../user/user';
 //TODO regenerate token, update user info in database

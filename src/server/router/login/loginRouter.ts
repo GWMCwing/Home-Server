@@ -1,6 +1,6 @@
 import { RouterBuilder } from '../routerBuilder';
 import { loginRendererCallback } from '../../render/login/loginRenderer';
-import { earlyLoginMiddleware } from '../../middleware/authentication/authSession';
+import { earlyLoginMiddleware } from '../../middleware/authentication/authSession_old';
 import { loginAuth } from './login';
 import { Request, Response } from 'express';
 export function loginRouter() {
