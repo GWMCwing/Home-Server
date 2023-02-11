@@ -1,10 +1,11 @@
 import { RouterBuilder } from '../../routerBuilder';
 import { courseCollection } from '../../../database/databaseInterface';
 import { Request, Response } from 'express';
+import { SchoolName } from '../../../../res/type/common';
 async function courseListQuery(req: Request, res: Response) {
     const dept = req.query.dept;
     const semester = req.query.semester;
-    const school = req.query.school;
+    const school = req.query.school as SchoolName;
     if (dept === undefined || semester === undefined || school === undefined) {
         res.status(400).json({ error: true });
         return;
@@ -35,7 +36,7 @@ async function courseListQuery(req: Request, res: Response) {
 async function courseQuery(req: Request, res: Response) {
     const dept = req.query.dept;
     const id = req.query.id; // the code id of the course COMP2012: id = 2012
-    const school = req.query.school;
+    const school = req.query.school as SchoolName;
     const semester = req.query.semester;
     if (
         dept === undefined ||
