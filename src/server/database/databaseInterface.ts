@@ -6,10 +6,12 @@ import {
     MongoClient,
     OptionalId,
 } from 'mongodb';
+import { CourseBase } from '../../res/type/CourseType';
+import { User } from '../user/user';
 
 const dataBaseName = 'expressServer';
 
-class MongoDataBase_Base {
+class MongoDataBase_Base<T extends Document = Document> {
     protected db: Db;
     protected collection: Collection;
     constructor(
@@ -21,7 +23,7 @@ class MongoDataBase_Base {
         this.collection = this.db.collection(collectionName);
     }
     //
-    async findDocument(query: Filter<Document>, options: object = {}) {
+    async findDocument(query: Filter<T>, options: object = {}) {
         return this.collection.findOne(query, {
             projection: {
                 _id: 0,
@@ -29,7 +31,7 @@ class MongoDataBase_Base {
             ...options,
         });
     }
-    async findMultipleDoc(query: Filter<Document>, options: object = {}) {
+    async findMultipleDoc(query: Filter<T>, options: object = {}) {
         return this.collection.find(query, {
             projection: {
                 _id: 0,
@@ -38,32 +40,32 @@ class MongoDataBase_Base {
         });
     }
     //
-    async insertMultipleDoc(doc: OptionalId<Document>[], options: object = {}) {
+    async insertMultipleDoc(doc: OptionalId<T>[], options: object = {}) {
         return await this.collection.insertMany(doc, options);
     }
-    async insertDocument(doc: OptionalId<Document>) {
+    async insertDocument(doc: OptionalId<T>) {
         return await this.collection.insertOne(doc);
     }
     //
-    async updateDoc(query: Filter<Document>, obj: object, option = {}) {
+    async updateDoc(query: Filter<T>, obj: object, option = {}) {
         return await this.collection.updateOne(query, { $set: obj }, option);
     }
-    async updateMany(query: Filter<Document>, obj: object = {}) {
+    async updateMany(query: Filter<T>, obj: object = {}) {
         return await this.collection.updateMany(query, obj);
     }
     //
-    async deleteOne(query: Filter<Document>) {
+    async deleteOne(query: Filter<T>) {
         return await this.collection.deleteOne(query);
     }
-    async deleteMany(query: Filter<Document>) {
+    async deleteMany(query: Filter<T>) {
         return await this.collection.deleteMany(query);
     }
-    async distinct(field: any, query: Filter<Collection>) {
+    async distinct(field: any, query: Filter<Collection<T>>) {
         return await this.collection.distinct(field, query);
     }
 }
 
-class UserCollection extends MongoDataBase_Base {
+class UserCollection extends MongoDataBase_Base<User> {
     static #instance: UserCollection;
     constructor(dbClient: MongoClient, dataBaseName: string) {
         if (UserCollection.#instance) return UserCollection.#instance;
@@ -74,7 +76,7 @@ class UserCollection extends MongoDataBase_Base {
         return UserCollection.#instance;
     }
 }
-class CourseCollection extends MongoDataBase_Base {
+class CourseCollection extends MongoDataBase_Base<CourseBase> {
     static #instance: CourseCollection;
     constructor(dbClient: MongoClient, dataBaseName: string) {
         if (CourseCollection.#instance) return CourseCollection.#instance;
