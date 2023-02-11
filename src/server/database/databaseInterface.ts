@@ -1,19 +1,23 @@
 import {
+    BulkWriteOptions,
     Collection,
     Db,
     Document,
     Filter,
+    FindOptions,
     MongoClient,
     OptionalId,
+    OptionalUnlessRequiredId,
+    UpdateFilter,
 } from 'mongodb';
 import { CourseBase } from '../../res/type/CourseType';
 import { User } from '../user/user';
 
 const dataBaseName = 'expressServer';
 
-class MongoDataBase_Base<T extends Document = Document> {
+class MongoDataBase_Base<TSchema extends Document = Document> {
     protected db: Db;
-    protected collection: Collection;
+    protected collection: Collection<TSchema>;
     constructor(
         dbClient: MongoClient,
         dataBaseName: string,
@@ -23,7 +27,7 @@ class MongoDataBase_Base<T extends Document = Document> {
         this.collection = this.db.collection(collectionName);
     }
     //
-    async findDocument(query: Filter<T>, options: object = {}) {
+    async findDocument(query: Filter<TSchema>, options: FindOptions = {}) {
         return this.collection.findOne(query, {
             projection: {
                 _id: 0,
@@ -31,7 +35,7 @@ class MongoDataBase_Base<T extends Document = Document> {
             ...options,
         });
     }
-    async findMultipleDoc(query: Filter<T>, options: object = {}) {
+    async findMultipleDoc(query: Filter<TSchema>, options: FindOptions = {}) {
         return this.collection.find(query, {
             projection: {
                 _id: 0,
@@ -40,27 +44,27 @@ class MongoDataBase_Base<T extends Document = Document> {
         });
     }
     //
-    async insertMultipleDoc(doc: OptionalId<T>[], options: object = {}) {
+    async insertMultipleDoc(doc: OptionalUnlessRequiredId<TSchema>[], options: BulkWriteOptions = {}) {
         return await this.collection.insertMany(doc, options);
     }
-    async insertDocument(doc: OptionalId<T>) {
+    async insertDocument(doc: OptionalUnlessRequiredId<TSchema>) {
         return await this.collection.insertOne(doc);
     }
     //
-    async updateDoc(query: Filter<T>, obj: object, option = {}) {
-        return await this.collection.updateOne(query, { $set: obj }, option);
+    async updateDoc(query: Filter<TSchema>, update: Partial<TSchema> | UpdateFilter<TSchema>, option = {}) {
+        return await this.collection.updateOne(query, update, option);
     }
-    async updateMany(query: Filter<T>, obj: object = {}) {
-        return await this.collection.updateMany(query, obj);
+    async updateMany(query: Filter<TSchema>, update: UpdateFilter<TSchema> = {}) {
+        return await this.collection.updateMany(query, update);
     }
     //
-    async deleteOne(query: Filter<T>) {
+    async deleteOne(query: Filter<TSchema>) {
         return await this.collection.deleteOne(query);
     }
-    async deleteMany(query: Filter<T>) {
+    async deleteMany(query: Filter<TSchema>) {
         return await this.collection.deleteMany(query);
     }
-    async distinct(field: any, query: Filter<Collection<T>>) {
+    async distinct(field: any, query: Filter<TSchema>) {
         return await this.collection.distinct(field, query);
     }
 }

@@ -1,3 +1,4 @@
+/**
 import assert from 'assert';
 import crypto from 'crypto';
 import { NextFunction, Request, Response } from 'express';
@@ -96,7 +97,7 @@ export async function earlyLoginMiddleware(
     if (!user) return next();
     // compare cookie token
     try {
-        assert.strictEqual(loginToken, user.loginToken);
+        assert.strictEqual(loginToken, (user as User).loginToken);
     } catch (err) {
         console.log(err);
         return next();
@@ -120,3 +121,4 @@ export async function earlyLoginMiddleware(
         }
     );
 }
+*/

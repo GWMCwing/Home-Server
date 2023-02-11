@@ -76,7 +76,7 @@ class UserManager {
             function (err: any, password: any, salt: any, hash: any) {
                 if (err) return callback(err, false, req, res);
                 try {
-                    assert.strictEqual(hash, user.passwordHash);
+                    assert.strictEqual(hash, user.hashed_password);
                 } catch (err) {
                     return callback(err, false, req, res);
                 }

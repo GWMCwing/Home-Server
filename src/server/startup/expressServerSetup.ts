@@ -16,7 +16,10 @@ import {
 } from 'http';
 import { createServer as createServer_https } from 'https';
 import { MongoClient } from 'mongodb';
+import MongoStore from 'connect-mongo';
 import { readFileSync } from 'fs';
+import passport from 'passport';
+import session, { Session } from 'express-session';
 //
 const threadName = 'Main';
 const morgan_dateTimeFormatter = new Intl.DateTimeFormat([], {
@@ -72,6 +75,35 @@ function setupRequestParser(app: Express) {
     app.use(cookieParser());
 }
 //
+declare module 'express-session' {
+    interface SessionData {
+        messages: string[];
+    }
+}
+//
+function setupPassport(app: Express, db: MongoClient, isInDev: boolean) {
+    app.use(
+        session({
+            secret: 'keyboard cat',
+            resave: false, // don't save session if unmodified
+            saveUninitialized: false, // don't create session until something stored
+            store: MongoStore.create({
+                client: db,
+                dbName: 'Express' + (isInDev ? '_dev' : ''),
+            }),
+        })
+    );
+    app.use(passport.authenticate('session'));
+
+    app.use(function (req, res, next) {
+        var msgs = req.session.messages || [];
+        res.locals.messages = msgs;
+        res.locals.hasMessages = !!msgs.length;
+        req.session.messages = [];
+        next();
+    });
+}
+//
 //
 export function setup_expressServer(
     app: Express,
@@ -96,6 +128,8 @@ export function setup_expressServer(
     // console.log('setting');
     //
     initiateDatabaseInterface(db, 'Express' + (isInDev ? '_dev' : ''));
+    //
+    setupPassport(app, db, isInDev);
     //
     serveStatic(app);
     //

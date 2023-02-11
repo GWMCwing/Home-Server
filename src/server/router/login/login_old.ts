@@ -1,3 +1,4 @@
+/**
 import { userManager } from '../../user/userManager';
 import { regenerateSession } from '../../middleware/authentication/authSession_old';
 import { Response, Request } from 'express';
@@ -44,3 +45,4 @@ export async function loginAuth(req: Request, res: Response) {
         authenticateCallback
     );
 }
+*/

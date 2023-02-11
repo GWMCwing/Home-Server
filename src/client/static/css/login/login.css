@@ -11,12 +11,12 @@
     
 
 #loginForm input{
-    background-color: rgb(37, 37, 37);
-    border:0;
+    background-color: rgb(230, 230, 230);
+    /* border:0; */
     width:100%;
 }
 #loginForm input:focus-visible{
-    outline: none;
+    /* outline: none; */
 }
 #loginForm input[type=submit]{
     margin:auto;

@@ -1,3 +1,4 @@
+//- Add dom for messages when login fail
 doctype html
 html(lang="en")
     head
@@ -15,7 +16,7 @@ html(lang="en")
         .formWrapper
             form(id = "loginForm" name="loginForm") 
                 label(for="formNameInput") User Name
-                input(id="formNameInput",type="text", name="name",autocomplete="off", required)
+                input(id="formNameInput",type="text", name="username",autocomplete="off", required)
                 label(for="formPasswordInput") Password
                 input(id="formPasswordInput",type="password", name="password",autocomplete="off", required)
                 input(type="submit", value="Submit" )

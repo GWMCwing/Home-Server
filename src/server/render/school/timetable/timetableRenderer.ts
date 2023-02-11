@@ -4,10 +4,11 @@ import { generateNavBarItemList } from '../../navBar/navBarGenerator';
 import { courseCollection } from '../../../database/databaseInterface';
 import { Request, Response } from 'express';
 import { config } from '../../../../config/config';
+import { SchoolName } from '../../../../res/type/common';
 //
 //
 export async function timetableRendererCallback(req: Request, res: Response) {
-    const schoolName = req.params.schoolName;
+    const schoolName = req.params.schoolName as SchoolName;
     if (!SchoolList.includes(schoolName)) {
         res.redirect('../timetable');
         return;
