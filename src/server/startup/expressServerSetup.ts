@@ -7,7 +7,11 @@ import { serveStatic } from '../middleware/static/serveStatic';
 import { setupRouter } from '../router/rootRouter';
 import { loadErrorHandlerMiddleware } from '../middleware/errorHandlerMiddleware';
 //
-import { Express } from 'express';
+import {
+    Express,
+    json as Express_jsonParser,
+    urlencoded as Express_urlencoded,
+} from 'express';
 import {
     createServer as createServer_http,
     IncomingMessage,
@@ -20,6 +24,7 @@ import MongoStore from 'connect-mongo';
 import { readFileSync } from 'fs';
 import passport from 'passport';
 import session, { Session } from 'express-session';
+import bodyParser from 'body-parser';
 //
 const threadName = 'Main';
 const morgan_dateTimeFormatter = new Intl.DateTimeFormat([], {
@@ -72,7 +77,9 @@ function setupRendering(app: Express) {
     }
 }
 function setupRequestParser(app: Express) {
-    app.use(cookieParser());
+    app.use(Express_jsonParser());
+    app.use(Express_urlencoded({ extended: true }));
+    app.use(cookieParser(process.env.COOKIE_SECRET));
 }
 //
 declare module 'express-session' {
@@ -96,7 +103,7 @@ function setupPassport(app: Express, db: MongoClient, isInDev: boolean) {
     app.use(passport.authenticate('session'));
 
     app.use(function (req, res, next) {
-        var msgs = req.session.messages || [];
+        const msgs = req.session.messages || [];
         res.locals.messages = msgs;
         res.locals.hasMessages = !!msgs.length;
         req.session.messages = [];

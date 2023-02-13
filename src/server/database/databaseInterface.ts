@@ -44,17 +44,27 @@ class MongoDataBase_Base<TSchema extends Document = Document> {
         });
     }
     //
-    async insertMultipleDoc(doc: OptionalUnlessRequiredId<TSchema>[], options: BulkWriteOptions = {}) {
+    async insertMultipleDoc(
+        doc: OptionalUnlessRequiredId<TSchema>[],
+        options: BulkWriteOptions = {}
+    ) {
         return await this.collection.insertMany(doc, options);
     }
     async insertDocument(doc: OptionalUnlessRequiredId<TSchema>) {
         return await this.collection.insertOne(doc);
     }
     //
-    async updateDoc(query: Filter<TSchema>, update: Partial<TSchema> | UpdateFilter<TSchema>, option = {}) {
+    async updateDoc(
+        query: Filter<TSchema>,
+        update: Partial<TSchema> | UpdateFilter<TSchema>,
+        option = {}
+    ) {
         return await this.collection.updateOne(query, update, option);
     }
-    async updateMany(query: Filter<TSchema>, update: UpdateFilter<TSchema> = {}) {
+    async updateMany(
+        query: Filter<TSchema>,
+        update: UpdateFilter<TSchema> = {}
+    ) {
         return await this.collection.updateMany(query, update);
     }
     //

@@ -9,6 +9,7 @@ import { API_Router } from './API/API_Router';
 
 import { Express } from 'express';
 import { reactRouter } from './react/reactRouter';
+import { signupRouter } from './login/signup';
 function setupDevRouter(app: Express) {
     console.warn('Using non production methods in rootRouter');
     app.post('/createLogin_Test', (req, res) => {
@@ -38,6 +39,7 @@ export function setupRouter(app: Express) {
     // router for all sub path
     app.use(...API_Router());
     app.use(...loginRouter());
+    app.use(...signupRouter());
     app.use(...dashboardRouter());
     app.use(...schoolRouter());
     app.use(...reactRouter());

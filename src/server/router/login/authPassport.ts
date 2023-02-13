@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from 'express';
 import { userCollection } from '../../database/databaseInterface';
 
 import passport from 'passport';
@@ -50,12 +49,14 @@ passport.use(
     })
 );
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 passport.serializeUser(function (user: any, cb) {
     process.nextTick(function () {
         cb(null, { id: user.id, username: user.username });
     });
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 passport.deserializeUser(function (user: any, cb) {
     process.nextTick(function () {
         return cb(null, user);
