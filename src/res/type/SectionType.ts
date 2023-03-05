@@ -31,7 +31,7 @@ export function isDayOfWeek(dayOfWeek: string): dayOfWeek is DayOfWeek {
 }
 
 export class DateTime {
-    dayOfWeek: DayOfWeek[][];
+    dayOfWeek: DayOfWeek[][]; // e.g. [[Mo, Tu], [We, Th]]
     startTime: number[]; // number of minutes from 00:00
     endTime: number[]; // number of minutes from 00:00
     constructor(
@@ -64,12 +64,19 @@ export interface SectionBaseInterface {
 }
 
 export abstract class SectionBase implements SectionBaseInterface {
+    /** name of the section*/
     name: string;
+    /** id of the section (e.g. L01, T01, LA01) */
     id: string;
+    /** type of the section (e.g. L, T, LA, R) */
     type: SectionType;
+    /** dateTime of the section */
     dateTime: DateTime;
+    /** location of the section */
     location: string[];
+    /** instructor of the section */
     instructor: string[];
+    /** number of day of week of the section */
     dateTimeCount: number; // number of day of week of the section
     //
     quota: number;

@@ -3,27 +3,39 @@ import { SchoolName } from './common';
 import { SectionBase } from './SectionType';
 
 export abstract class CourseBase {
+    /** department of the course */
     dept: string;
+    /** id of the course (e.g. 1000, 1000A) */
     id: string;
+    /** name of the course (e.g. Introduction to Computer Science) */
     name: string;
+    /** credit of the course */
     credit: number;
     //
+    /** list of sections of the course */
     sectionList: SectionBase[];
     //
+    /** attribute of the course */
     attribute: string[];
+    /** description of the course */
     description: string;
     //
+    /** require matching section and lab */
     matchingRequired: boolean;
+    /** course info of the course */
     courseInfo: string;
     //
     preRequisite: string;
     coRequisite: string;
     exclusion: string;
     //
+    /** semester of the course */
     semester: string;
     previousCode: string[];
+    /** part of common core of the course */
     commonCore: string;
     //
+    /** which school of the course */
     school: SchoolName;
     //
     constructor(
