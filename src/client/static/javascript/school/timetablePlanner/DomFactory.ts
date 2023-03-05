@@ -10,6 +10,13 @@ export class DomFactory {
     static courseDetailDom(course: CourseBase): HTMLDivElement {
         return _CourseDetailDomFactory.courseDetailDom(course);
     }
+    static sectionIconDom(
+        dept: string,
+        courseCode: string,
+        section: SectionBase
+    ): HTMLDivElement {
+        return _SectionIconDomFactory.sectionIconDom(dept, courseCode, section);
+    }
 }
 
 //
@@ -80,11 +87,15 @@ class _CourseDetailDomFactory {
         //
         return courseDetailTitleContainer;
     }
-    static _sectionBoxDom(section: SectionBase): HTMLDivElement {
-        console.log(
-            'Creating section box dom',
-            JSON.stringify(section, null, 2)
-        );
+    static _sectionBoxDom(
+        dept: string,
+        courseCode: string,
+        section: SectionBase
+    ): HTMLDivElement {
+        // console.log(
+        //     'Creating section box dom',
+        //     JSON.stringify(section, null, 2)
+        // );
         /**
          * <div class="section-box">
          *      <div class="section-id">L01</div>
@@ -120,13 +131,19 @@ class _CourseDetailDomFactory {
         sectionBox.appendChild(sectionId);
         sectionBox.appendChild(sectionDateTimeContainer);
         //
+        sectionBox.onclick = function () {
+            Timetable.getInstance().selectSection(dept, courseCode, section);
+        };
+        //
         return sectionBox;
     }
     static _createSectionBoxDom(
+        dept: string,
+        courseCode: string,
         sectionList: SectionBase[],
         type: SectionType
     ): HTMLDivElement {
-        console.log('Creating section box dom of type: ', type);
+        // console.log('Creating section box dom of type: ', type);
         /**
          * <div class="section-box-container" type=SectionType>
          *     <div class="section-box">
@@ -141,7 +158,7 @@ class _CourseDetailDomFactory {
         //
         for (let i = 0; i < sectionList.length; i++) {
             const section = sectionList[i];
-            const sectionBox = this._sectionBoxDom(section);
+            const sectionBox = this._sectionBoxDom(dept, courseCode, section);
             sectionBoxContainer.appendChild(sectionBox);
         }
         return sectionBoxContainer;
@@ -171,6 +188,8 @@ class _CourseDetailDomFactory {
                 sectionType = section.type;
             } else if (section.type !== sectionType) {
                 const sectionBoxContainerDom = this._createSectionBoxDom(
+                    course.dept,
+                    course.id,
                     sectionList_type,
                     sectionType
                 );
@@ -182,6 +201,8 @@ class _CourseDetailDomFactory {
         }
         if (sectionType !== null) {
             const sectionBoxContainerDom = this._createSectionBoxDom(
+                course.dept,
+                course.id,
                 sectionList_type,
                 sectionType
             );
@@ -212,5 +233,51 @@ class _CourseDetailDomFactory {
         courseDetailContainer.appendChild(courseDetailBoxContainer);
         //
         return courseDetailContainer;
+    }
+}
+
+class _SectionIconDomFactory {
+    //
+    static sectionIconDom(
+        dept: string,
+        courseCode: string,
+        section: SectionBase
+    ) {
+        /**
+         *  <div class="sectionIcon" dept=Dept course=CourseCode section=section> // section= L1, LA1, T1, R1...
+         *      <span class="sectionIcon dept"> dept</span>
+         *      <span class="sectionIcon courseCode"> courseCode</span>
+         *      <span class="sectionIcon time"> time</span>
+         *      <span class="sectionIcon place"> place</span>
+         *  </div>
+         */
+        const sectionIcon = document.createElement('div');
+        sectionIcon.classList.add('sectionIcon');
+        sectionIcon.setAttribute('dept', dept);
+        sectionIcon.setAttribute('course', courseCode);
+        sectionIcon.setAttribute('section', section.id);
+        //
+        const deptDom = document.createElement('span');
+        deptDom.classList.add('sectionIcon', 'dept');
+        deptDom.textContent = dept;
+        //
+        const courseCodeDom = document.createElement('span');
+        courseCodeDom.classList.add('sectionIcon', 'courseCode');
+        courseCodeDom.textContent = courseCode;
+        //
+        const timeDom = document.createElement('span');
+        timeDom.classList.add('sectionIcon', 'time');
+        timeDom.textContent = asStringList(section.dateTime).join('\n');
+        //
+        const placeDom = document.createElement('span');
+        placeDom.classList.add('sectionIcon', 'place');
+        placeDom.textContent = 'Placeholder';
+        //
+        sectionIcon.appendChild(deptDom);
+        sectionIcon.appendChild(courseCodeDom);
+        sectionIcon.appendChild(timeDom);
+        sectionIcon.appendChild(placeDom);
+        //
+        return sectionIcon;
     }
 }

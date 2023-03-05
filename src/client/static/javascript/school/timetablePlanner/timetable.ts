@@ -1,6 +1,7 @@
 import { SchoolName } from '../../../../../res/type/common';
 import { TimetableInternalHandler } from './internalHandler.js';
 import { DisplayHandler } from './displayHandler.js';
+import { SectionBase } from '../../../../../res/type/SectionType';
 //
 export class Timetable {
     static #_instance: Timetable;
@@ -55,6 +56,14 @@ export class Timetable {
             return false;
         }
         this.displayHandler.displayCourseList(courseList);
+        return true;
+    }
+    public async selectSection(
+        dept: string,
+        courseCode: string,
+        section: SectionBase
+    ): Promise<boolean> {
+        this.displayHandler.displaySectionIcon(dept, courseCode, section);
         return true;
     }
 }
