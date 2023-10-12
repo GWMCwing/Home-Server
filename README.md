@@ -5,6 +5,10 @@
 [![license](https://img.shields.io/github/license/GWMCwing/Home-Server)](https://github.com/GWMCwing/Home-Server/blob/master/LICENSE)
 [![website-status](https://img.shields.io/website?up_message=online&url=https%3A%2F%2Fgwmc.duckdns.org)](https://gwmc.duckdns.org)
 
+This repo is now archived. Development is moved to this [repo](https://github.com/GWMCwing/Home-Server-Web) using a new stack and architecture approach.
+
+___
+
 A repo for my web server. This is a work in progress. This repo is used for learning and experimentation on backend development, front end development on basic css and html structuring. 
 
 Future updates may include
